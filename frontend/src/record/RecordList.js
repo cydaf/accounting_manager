@@ -64,7 +64,7 @@ export default function RecordList() {
                 variant="body2"
                 color="text.primary"
               >
-                價錢：{record.price} / 分類：{record.category} / date：{record.date}
+                價錢：{record.price} / 分類：{record.category} / 日期：{record.date}
               </Typography>
             </React.Fragment>
 
