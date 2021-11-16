@@ -9,7 +9,7 @@ public class MainController{
     @GetMapping(value = "/")
     @ResponseBody
     public String index() {
-        return "<h1>this andy!</h1>";
+        return "<h1>this michelle!</h1>";
     }
 
 }
