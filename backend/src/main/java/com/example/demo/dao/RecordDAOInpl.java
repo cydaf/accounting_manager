@@ -76,12 +76,13 @@ public Record findOne(int id) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "insert into product (user_id, price, category, descs, date) values(?, ?, ?, ?, ?)";
+      String sql = "insert into record (user_id, price, category, descs, date) values(?, ?, ?, ?, ?)";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, product.getprice());
-      stmt.setString(2, product.getcategory());
-      stmt.setString(3, product.getdescs());
-      stmt.setDate(4, product.getDate());
+      stmt.setString(1, product.getuser_id());
+      stmt.setInt(2, product.getprice());
+      stmt.setString(3, product.getcategory());
+      stmt.setString(4, product.getdescs());
+      stmt.setDate(5, product.getDate());
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
@@ -94,13 +95,13 @@ public Record findOne(int id) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "update Product set descs=?, price=?, category=?,inventory=?, safetyStock=? where id =?";
+      String sql = "update record set price=?, category=?, descs=?, date=? where id =?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, product.getprice());
       stmt.setString(2, product.getcategory());
       stmt.setString(3, product.getdescs());
       stmt.setDate(4, product.getDate());
-      stmt.setInt(6, product.getId());
+      stmt.setInt(5, product.getId());
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
@@ -115,7 +116,7 @@ public Record findOne(int id) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "delete from product where id =?";
+      String sql = "delete from record where id =?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, id);
       result = stmt.executeUpdate();
