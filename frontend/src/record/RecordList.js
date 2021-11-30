@@ -1,10 +1,9 @@
 import React, {useEffect,useState} from 'react';
-
 import { Box, List, ListItem, ListItemText } from '@mui/material';
 
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
-
+import AppMenu from '../ui/AppMenu';
 export default function RecordList() {
 
   const [record, setRecords] = useState([]);
@@ -50,7 +49,7 @@ export default function RecordList() {
       textAlign: 'left'
 
     }}>
-
+<AppMenu />
       <List subheader="Daily Accounting" aria-label="expenses">
 
       {record.map((record, index) => 
