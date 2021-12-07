@@ -17,14 +17,25 @@ import Grid from '@mui/material/Grid';
 
 export default function RecordList() {
   const [date, setDate] = React.useState(new Date());
-  const [records, setRecords] = useState([
-    {
-      date: "2021/12/5",
-      cost: 600,
-      category: "交通",
-      desc: "123"
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    async function fetchData () {
+      const result = await axios.get("/Record");
+      console.log(result);
+      setRecords(result.data);
     }
-  ]);
+    fetchData();
+  },[]);
+
+  // const [records, setRecords] = useState([
+  //   {
+  //     date: "2021/12/5",
+  //     cost: 600,
+  //     category: "交通",
+  //     desc: "123"
+  //   }
+  // ]);
   const insert = function (newRecord) {
     setRecords(oldRecords => [...oldRecords, newRecord])
   }
@@ -70,7 +81,7 @@ export default function RecordList() {
         {records.map((record, index) =>
 
           <ListItem divider key={index}>
-            <ListItemText primary={record.desc} secondary={
+            <ListItemText primary={record.descs} secondary={
               <React.Fragment>
                 <Typography
                   sx={{ display: 'inline' }}
@@ -78,7 +89,7 @@ export default function RecordList() {
                   variant="body2"
                   color="text.primary"
                 >
-                  價錢：{record.cost} / 分類：{record.category} / 日期：{record.date}
+                  價錢：{record.price} / 分類：{record.category} / 日期：{record.date}
                 </Typography>
               </React.Fragment>
 
