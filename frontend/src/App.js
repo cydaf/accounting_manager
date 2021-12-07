@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RecordList from "./view/RecordList.js";
 import ForumIndex from "./view/ForumIndex.js"
 import ForumAddCard from "./view/ForumAddCard.js"
+import AddExpenditure from './component/AddExpenditure.js'
+import TabSwitch from './component/TabSwitch.js'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -13,11 +15,14 @@ const theme = createTheme({
 
   palette: {
     primary: {
-      main: '#f44336',
+      main: '#415A77', // #f44336(origin)
     },
     secondary: {
       main: '#F5B7B1',
     },
+    lightBlue: {
+      main: '778DA9',
+    }
   },
 });
 function App() {
@@ -30,6 +35,9 @@ function App() {
         <Route path="/record" element={<RecordList />} />
         <Route path="/forumIndex" element={<ForumIndex />} />
         <Route path="/forumAddCard" element={<ForumAddCard />} />
+        <Route path="/addExpenditure" element={<AddExpenditure />} />
+        <Route path="/TabSwitch" element={<TabSwitch />} />
+
       </Routes>
     </Router>
     </ThemeProvider>
