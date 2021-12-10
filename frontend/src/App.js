@@ -6,7 +6,8 @@ import ForumIndex from "./view/ForumIndex.js"
 import ForumAddCard from "./view/ForumAddCard.js"
 import AddExpenditure from './component/AddExpenditure.js'
 import TabSwitch from './component/TabSwitch.js'
-
+import SignIn from './account/SignIn.js'
+import SignUp from './account/SignUp.js'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
@@ -37,7 +38,8 @@ function App() {
         <Route path="/forumAddCard" element={<ForumAddCard />} />
         <Route path="/addExpenditure" element={<AddExpenditure />} />
         <Route path="/TabSwitch" element={<TabSwitch />} />
-
+        <Route path="/SignIn" element={<SignIn />} />
+        <Route path="/SignUp" element={<SignUp />} />
       </Routes>
     </Router>
     </ThemeProvider>
