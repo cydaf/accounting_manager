@@ -5,9 +5,11 @@ import com.example.demo.entity.Record;
 
 public interface RecordDAO {
 
- public List<Record> findAll();
+public List<Record> findAll();
 
 public Record findOne(int id);
+
+public int setSum();
 
 public int insert(Record record);
 

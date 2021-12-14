@@ -53,15 +53,13 @@ public Record findOne(int id) {
       while (rs.next()){
         Records.add(getRecord(rs));
       }
-  
     } catch(Exception e) {
         //something wrong
         System.out.println(e);
     }
        return Records;
-   }
- public Record getRecord(ResultSet rs) throws SQLException{
-    
+  }
+   public Record getRecord(ResultSet rs) throws SQLException{
     return new Record(
       rs.getInt("id"),
       rs.getString("user_id"),
@@ -70,8 +68,32 @@ public Record findOne(int id) {
       rs.getString("category"),
       rs.getDate("date"),
       rs.getString("revenue"));
-
  }
+
+ public int setSum() {
+  int sum = 0;
+  try {
+    Connection conn = dataSource.getConnection();
+    String sql = "select price, date, revenue from record";
+    PreparedStatement stmt = conn.prepareStatement(sql);
+    ResultSet rs = stmt.executeQuery();
+    while (rs.next()){
+      if(rs.getString("revenue").equals("expense"))
+      {
+        sum -= rs.getInt("price");
+      }
+      if(rs.getString("revenue").equals("income"))
+      {
+        sum += rs.getInt("price");
+      }
+    }
+  } catch(Exception e) {
+      //something wrong
+      System.out.println(e);
+  }
+  return sum;
+}
+
  public int insert(Record Record) {
     int result = 0;
     try {
@@ -109,8 +131,6 @@ public Record findOne(int id) {
       System.out.println(e);
     }
     return result;
-  
-  
   }
   
   public int delete(int id) {

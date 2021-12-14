@@ -21,12 +21,19 @@ public class RecordController {
 
   @GetMapping(value = "/Record")
   public List<Record> retrieveRecords() throws SQLException{
-      return dao.findAll();
+    return dao.findAll();
   }
+
+  @GetMapping(value = "/RecordSum")
+  public int retrieveRecordSum() throws SQLException{
+    return dao.setSum();
+  }
+
   @GetMapping(value = {"/Record/{id}"})
   public Record retrieveOneRecord(@PathVariable("id") int id) throws SQLException{
       return dao.findOne(id);
   }
+
   @PostMapping(value = "/Record")
   public void processFormCreate(@RequestBody Record Record) throws SQLException {
       dao.insert(Record);
