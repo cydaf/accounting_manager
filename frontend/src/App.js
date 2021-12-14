@@ -3,7 +3,6 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RecordList from "./view/RecordList.js";
 import ForumIndex from "./view/ForumIndex.js"
-import ForumAddCard from "./view/ForumAddCard.js"
 import AddExpenditure from './component/AddExpenditure.js'
 import TabSwitch from './component/TabSwitch.js'
 import SignIn from './account/SignIn.js'
@@ -35,7 +34,6 @@ function App() {
         <Route path="/" element={<RecordList />} />
         <Route path="/record" element={<RecordList />} />
         <Route path="/forumIndex" element={<ForumIndex />} />
-        <Route path="/forumAddCard" element={<ForumAddCard />} />
         <Route path="/addExpenditure" element={<AddExpenditure />} />
         <Route path="/TabSwitch" element={<TabSwitch />} />
         <Route path="/SignIn" element={<SignIn />} />
