@@ -15,7 +15,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 export default function ForumCard(props) {
-  const{title,date,content} = props.article;
+  const{title,date,content} = props.title;
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
