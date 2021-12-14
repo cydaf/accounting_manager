@@ -47,9 +47,8 @@ public Record findOne(int id) {
     List<Record> Records = new ArrayList<Record>();
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "select id, user_id, price, category, descs, date from record";
+      String sql = "select id, user_id, price, category, descs, date, revenue from record";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      
       ResultSet rs = stmt.executeQuery();
       while (rs.next()){
         Records.add(getRecord(rs));
@@ -69,20 +68,22 @@ public Record findOne(int id) {
       rs.getString("descs"),
       rs.getInt("price"),
       rs.getString("category"),
-      rs.getDate("date"));
+      rs.getDate("date"),
+      rs.getString("revenue"));
 
  }
  public int insert(Record Record) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "insert into record (user_id, price, category, descs, date) values(?, ?, ?, ?, ?)";
+      String sql = "insert into record (user_id, price, category, descs, date, revenue) values(?, ?, ?, ?, ?, ?)";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, Record.getId());
       stmt.setInt(2, Record.getprice());
       stmt.setString(3, Record.getcategory());
       stmt.setString(4, Record.getdescs());
       stmt.setDate(5, Record.getDate());
+      stmt.setString(6, Record.getRevenue());
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
