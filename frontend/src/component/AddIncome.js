@@ -1,19 +1,14 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-
+import axios from 'axios';
 import {
     Card,
     CardContent,
     Box,
-    Chip,
     Autocomplete,
-    Avatar,
     Container,
     TextareaAutosize,
     Button,
-    Tab, Tabs,
-    Typography,
-    TabsContext
 } from "@mui/material";
 
 import PropTypes from 'prop-types';
@@ -21,7 +16,6 @@ import TextField from "@mui/material/TextField";
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Stack from "@mui/material/Stack";
 import Icon from '@mui/material/Icon';
-import AppMenu from "../component/AppMenu";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SaveIcon from '@mui/icons-material/Save';
 // datePicker
@@ -34,35 +28,33 @@ export default function AddIncome(props) {
 
     const [value, setValue] = React.useState(options[0].label);
     const [inputValue, setInputValue] = React.useState('');
-    const [costValue, setCostValue] = React.useState(null);
-    const [dataValue, setDateValue] = React.useState(new Date());
-    const [descValue, setDescValue] = React.useState('');
-
+    const [priceValue, setPriceValue] = React.useState(null);
+    const [dateValue, setDateValue] = React.useState(new Date());
+    const [descsValue, setDescsValue] = React.useState('');
 
     const handleChange = (event) => {
-        setCostValue(event.target.value);
+        setPriceValue(event.target.value);
     };
 
+    const handleClick = function (e) {
+        // setRecord({...record)
+        if (e) {
+            console.log(e, e.target.name);
+        }
+    }
 
-    // const [record, setRecord] = React.useState({date:new Date(), cost:null, category:options[0].label, desc:""});
-    // const handleClick = function(e){
+    const update = async function () {
+        const record = { date: dateValue, price: priceValue, category: inputValue, descs: descsValue, revenue: 'income' };
+        console.log(record)
+        try {
+            await axios.post("/Record", record);
+        }
+        catch (e) {
+            console.log(e);
+        }
+        // props.close();
+    }
 
-    //     setRecord({...record,[e.target.name]:e.target.value})
-
-    //   }
-    //   const add = function(){
-    //     props.update(record);
-    //     console.log(record.date, record.cost, record.category, record.desc);
-    //   }
-
-    // const add = (e) => {
-    //     onAdd({ inputValue, costValue, dataValue, descValue });
-
-    //     setInputValue('')
-    //     setCostValue(null)
-    //     setDateValue(new Date())
-    //     setDescValue('')
-    // }
 
 
     return (
@@ -71,12 +63,12 @@ export default function AddIncome(props) {
             <Container maxWidth="sm" sx={{ mt: 5 }}>
                 <Card sx={{ minWidth: 275 }} >
                     <CardContent>
-                        <Stack spacing={3} sx={{ width: 500 }}>
+                        <Stack spacing={3}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <Stack spacing={3}>
                                     <DesktopDatePicker
                                         label="進款日期"
-                                        value={dataValue}
+                                        value={dateValue}
                                         minDate={new Date('2017-01-01')}
                                         onChange={(newValue) => {
                                             setDateValue(newValue);
@@ -91,14 +83,6 @@ export default function AddIncome(props) {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end', width: '50vw' }}>
                                     <MonetizationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                    {/* <TextField id="input-with-sx" label="消費金額" variant="standard"
-                                        value={costValue}
-                                        onChange={(event, newCostValue) => {
-                                            setCostValue(newCostValue);
-                                        }}
-                                    // value={record.cost}
-                                    // onChange={handleClick}
-                                    /> */}
                                     <TextField
                                         id="input-with-sx"
                                         label="進款金額"
@@ -107,34 +91,33 @@ export default function AddIncome(props) {
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
-                                        value={costValue}
+                                        value={priceValue}
                                         onChange={(e) => {
-                                            setCostValue(e.target.value)
+                                            setPriceValue(e.target.value)
                                         }
                                         }
                                         // value={record.cost}
                                         // onChange={handleClick}
-                                        name="cost"
+                                        name="price"
                                     />
                                 </Box>
                                 <Autocomplete
+                                    name="category"
                                     size="small"
-                                    value={value}
-                                    onChange={(event, newValue) => {
-                                        setValue(newValue);
-                                    }}
                                     // value={record.category}
                                     // onChange={handleClick}
+                                    value={value}
+                                    onChange={(event, newInputValue) => {
+                                        setValue(newInputValue);
+                                    }}
                                     inputValue={inputValue}
                                     onInputChange={(event, newInputValue) => {
                                         setInputValue(newInputValue);
                                     }}
-                                    // value={record.category}
-                                    // onChange={handleChange}
-                                    name="category"
+                                    // inputValue={record.category}
+                                    // onInputChange={handleClick}
                                     id="controllable-states-demo"
                                     options={options}
-                                    // getOptionLabel={(option) => option.label}
                                     getOptionLabel={(option) => option.label || ""}
                                     sx={{ width: '50vw' }}
                                     renderOption={(props, option) => (
@@ -150,36 +133,31 @@ export default function AddIncome(props) {
                                 />
                             </Box>
 
-
                             <TextareaAutosize
                                 minRows={10}
                                 aria-label="maximum height"
                                 placeholder="寫點備註吧..."
-                                // defaultValue=""
                                 className="textarea"
-                                value={descValue}
+                                value={descsValue}
                                 onChange={(e) => {
-                                    setDescValue(e.target.value)
+                                    setDescsValue(e.target.value)
                                 }
                                 }
-
-                                name="desc"
+                                name="descs"
                             // onChange={handleClick}
                             // value={record.desc}
                             />
                         </Stack>
-                        <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} component={Link} to="../">取消</Button>
-                        <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} >儲存</Button>
+                        {/* <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} component={Link} to="../">取消</Button> */}
+                        <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} onClick={() => props.close()}>取消</Button>
+                        <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} onClick={update}>儲存</Button>
                     </CardContent>
                     <div>
-                        <div>{`進款日期： ${dataValue !== null ? `'${dataValue.getFullYear()}/${dataValue.getMonth() + 1}/${dataValue.getDate()}'` : 'null'}`}</div>
-                        <div>{`進款金額： ${costValue !== null ? `'${costValue}'` : 'null'}`}</div>
-                        {/* <div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div> */}
+                    <div>{`消費日期： ${dateValue !== null ? `'${dateValue.getFullYear()}/${dateValue.getMonth() + 1}/${dateValue.getDate()}'` : 'null'}`}</div>
+                        <div>{`進帳金額： ${priceValue !== null ? `'${priceValue}'` : 'null'}`}</div>
                         <div>{`類別: '${inputValue}'`}</div>
-                        <div>{`細項: '${descValue}'`}</div>
-
+                        <div>{`細項: '${descsValue}'`}</div>
                         <br />
-
                     </div>
                 </Card>
             </Container>

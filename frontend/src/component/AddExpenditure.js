@@ -1,27 +1,20 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-
+import axios from 'axios';
 import {
     Card,
     CardContent,
     Box,
-    Chip,
     Autocomplete,
-    Avatar,
     Container,
     TextareaAutosize,
     Button,
-    Tab, Tabs,
-    Typography,
-    TabsContext
 } from "@mui/material";
 
-import PropTypes from 'prop-types';
 import TextField from "@mui/material/TextField";
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Stack from "@mui/material/Stack";
 import Icon from '@mui/material/Icon';
-import AppMenu from "../component/AppMenu";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SaveIcon from '@mui/icons-material/Save';
 // datePicker
@@ -29,107 +22,58 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
-// tabs
-// function TabPanel(props) {
-//     const { children, value, index, ...other } = props;
-
-//     return (
-//         <div
-//             role="tabpanel"
-//             hidden={value !== index}
-//             id={`simple-tabpanel-${index}`}
-//             aria-labelledby={`simple-tab-${index}`}
-//             {...other}
-//         >
-//             {value === index && (
-//                 <Box sx={{ p: 3 }}>
-//                     <Typography>{children}</Typography>
-//                 </Box>
-//             )}
-//         </div>
-//     );
-// }
-
-// TabPanel.propTypes = {
-//     children: PropTypes.node,
-//     index: PropTypes.number.isRequired,
-//     value: PropTypes.number.isRequired,
-// };
-
-// function a11yProps(index) {
-//     return {
-//         id: `simple-tab-${index}`,
-//         'aria-controls': `simple-tabpanel-${index}`,
-//     };
-// }
-
 export default function AddExpenditure(props) {
-
-    // const [selectedTab, setSelectedTab] = React.useState('1');
-    // const tabHandleChange = (event, newValue) => {
-    //     setSelectedTab(newValue);
-    // };
-
 
     const [value, setValue] = React.useState(options[0].label);
     const [inputValue, setInputValue] = React.useState('');
-    const [costValue, setCostValue] = React.useState(null);
-    const [dataValue, setDateValue] = React.useState(new Date());
-    const [descValue, setDescValue] = React.useState('');
+    const [priceValue, setPriceValue] = React.useState(null);
+    const [dateValue, setDateValue] = React.useState(new Date());
+    const [descsValue, setDescsValue] = React.useState('');
 
 
     const handleChange = (event) => {
-        setCostValue(event.target.value);
+        setPriceValue(event.target.value);
     };
 
 
-    // const [record, setRecord] = React.useState({date:new Date(), cost:null, category:options[0].label, desc:""});
-    // const handleClick = function(e){
+    // const [record, setRecord] = React.useState({ date: new Date(), price: 0, category: options[0].label, descs: "", revenue: "expense" });
 
-    //     setRecord({...record,[e.target.name]:e.target.value})
+    const handleClick = function (e) {
+        // setRecord({...record)
+        if (e) {
+            console.log(e, e.target.name);
+        }
 
-    //   }
-    //   const add = function(){
-    //     props.update(record);
-    //     console.log(record.date, record.cost, record.category, record.desc);
-    //   }
 
-    // const add = (e) => {
-    //     onAdd({ inputValue, costValue, dataValue, descValue });
+    }
 
-    //     setInputValue('')
-    //     setCostValue(null)
-    //     setDateValue(new Date())
-    //     setDescValue('')
-    // }
-
+    const update = async function () {
+        const record = { date: dateValue, price: priceValue, category: inputValue, descs: descsValue, revenue: 'expense' };
+        console.log(record)
+        try {
+            await axios.post("/Record", record);
+        }
+        catch (e) {
+            console.log(e);
+        }
+        // props.close();
+    }
 
     return (
         <Box>
-            {/* <AppMenu /> */}
-            {/* <TabsContext value={selectedTab}>
-                <TabList onChange={tabHandleChange} aria-label="lab ex">
-                    <Tab label="支出" value="1"></Tab>
-                    <Tab label="收入" value="2"></Tab>
-                </TabList>
-                <TabPanel value="1">支出</TabPanel>
-                <TabPanel value="2">收入</TabPanel>
-
-            </TabsContext> */}
             <Container maxWidth="sm" sx={{ mt: 5 }}>
                 <Card sx={{ minWidth: 275 }} >
                     <CardContent>
-                        <Stack spacing={3} sx={{ width: 500 }}>
+                        <Stack spacing={3}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <Stack spacing={3}>
+                                <Stack spacing={3} onChange={handleClick} name="date">
                                     <DesktopDatePicker
-                             
-                             label="消費日期"
-                                        value={dataValue}
-                                        minDate={new Date('2017-01-01')}
+                                        label="消費日期"
+                                        value={dateValue}
                                         onChange={(newValue) => {
                                             setDateValue(newValue);
                                         }}
+                                        minDate={new Date('2017-01-01')}
                                         // value={record.date}
                                         // onChange={handleClick}
                                         name="date"
@@ -140,50 +84,38 @@ export default function AddExpenditure(props) {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end', width: '50vw' }}>
                                     <MonetizationOnIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                    {/* <TextField id="input-with-sx" label="消費金額" variant="standard"
-                                        value={costValue}
-                                        onChange={(event, newCostValue) => {
-                                            setCostValue(newCostValue);
-                                        }}
-                                    // value={record.cost}
-                                    // onChange={handleClick}
-                                    /> */}
                                     <TextField
                                         id="input-with-sx"
+                                        name="price"
                                         label="消費金額"
                                         type="number"
                                         variant="standard"
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
-                                        value={costValue}
-                                        onChange={(e) => {
-                                            setCostValue(e.target.value)
-                                        }
-                                        }
-                                        // value={record.cost}
-                                        // onChange={handleClick}
-                                        name="cost"
+                                        value={priceValue}
+                                        onChange={handleChange}
+                                    // value={record.price}
+                                    // onChange={handleClick}
                                     />
                                 </Box>
                                 <Autocomplete
+                                    name="category"
                                     size="small"
-                                    value={value}
-                                    onChange={(event, newValue) => {
-                                        setValue(newValue);
-                                    }}
                                     // value={record.category}
                                     // onChange={handleClick}
+                                    value={value}
+                                    onChange={(event, newInputValue) => {
+                                        setValue(newInputValue);
+                                    }}
                                     inputValue={inputValue}
                                     onInputChange={(event, newInputValue) => {
                                         setInputValue(newInputValue);
                                     }}
-                                    // value={record.category}
-                                    // onChange={handleChange}
-                                    name="category"
+                                    // inputValue={record.category}
+                                    // onInputChange={handleClick}
                                     id="controllable-states-demo"
                                     options={options}
-                                    // getOptionLabel={(option) => option.label}
                                     getOptionLabel={(option) => option.label || ""}
                                     sx={{ width: '50vw' }}
                                     renderOption={(props, option) => (
@@ -201,34 +133,35 @@ export default function AddExpenditure(props) {
 
 
                             <TextareaAutosize
+                                name="descs"
                                 minRows={10}
                                 aria-label="maximum height"
                                 placeholder="寫點備註吧..."
-                                // defaultValue=""
                                 className="textarea"
-                                value={descValue}
+                                value={descsValue}
                                 onChange={(e) => {
-                                    setDescValue(e.target.value)
-                                }
-                                }
-
-                                name="desc"
+                                    setDescsValue(e.target.value)
+                                }}
                             // onChange={handleClick}
-                            // value={record.desc}
+                            // value={record.descs}
                             />
                         </Stack>
-                        <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} component={Link} to="../">取消</Button>
-                        <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} >儲存</Button>
+                        {/* <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} component={Link} to="../">取消</Button> */}
+                        <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} onClick={() => props.close()}>取消</Button>
+                        <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} onClick={update}>儲存</Button>
                     </CardContent>
                     <div>
-                        <div>{`消費日期： ${dataValue !== null ? `'${dataValue.getFullYear()}/${dataValue.getMonth() + 1}/${dataValue.getDate()}'` : 'null'}`}</div>
-                        <div>{`消費金額： ${costValue !== null ? `'${costValue}'` : 'null'}`}</div>
-                        {/* <div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div> */}
+                        <div>{`消費日期： ${dateValue !== null ? `'${dateValue.getFullYear()}/${dateValue.getMonth() + 1}/${dateValue.getDate()}'` : 'null'}`}</div>
+                        <div>{`消費金額： ${priceValue !== null ? `'${priceValue}'` : 'null'}`}</div>
                         <div>{`類別: '${inputValue}'`}</div>
-                        <div>{`細項: '${descValue}'`}</div>
+                        <div>{`細項: '${descsValue}'`}</div>
+
+                        {/* <div>{`消費日期： ${record.date !== "" ? `'${record.date.getFullYear()}/${record.date.getMonth() + 1}/${record.date.getDate()}'` : 'null'}`}</div> */}
+                        {/* <div>{`消費金額： ${record.price !== "" ? `'${record.price}'` : 'null'}`}</div> */}
+                        {/* <div>{`類別: '${record.category}'`}</div> */}
+                        {/* <div>{`細項: '${record.descs}'`}</div> */}
 
                         <br />
-
                     </div>
                 </Card>
             </Container>
