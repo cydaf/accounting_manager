@@ -22,7 +22,16 @@ const theme = createTheme({
       main: '#F5B7B1',
     },
     lightBlue: {
-      main: '778DA9',
+      main: '#778DA9',
+    },
+    lightbg:{
+      main: '#E0E1DD'
+    },
+    lightGray: {
+      main: 'rgb(130, 130, 130)'
+    },
+    lightText: {
+      main: 'white'
     }
   },
 });
