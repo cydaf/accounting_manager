@@ -18,6 +18,11 @@ export default function RecordList() {
   const [deleted, setDeleted] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const handleChange = (newDate) => {
+    setDate(newDate);
+  };
+  const onChangeDate = date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
+
 
   useEffect(() => {
     async function fetchData() {
@@ -64,11 +69,11 @@ export default function RecordList() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <CalendarPicker date={date} onChange={(newDate) => setDate(newDate)} />
+            <CalendarPicker date={date} onChange={handleChange} />
           </Grid>
         </Grid>
       </LocalizationProvider>
-      <List subheader="Daily Accounting" aria-label="expenses"
+      <List subheader={onChangeDate} aria-label="expenses"
         sx={{ width: '95%', margin: 'auto' }}
       >
 
