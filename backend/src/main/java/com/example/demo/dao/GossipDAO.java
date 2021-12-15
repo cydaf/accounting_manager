@@ -5,14 +5,14 @@ import com.example.demo.entity.Gossip;
 
 public interface GossipDAO {
 
- public List<Gossip> findAll();
+public List<Gossip> findAll();
 
-public Gossip findOne(int id);
+public Gossip findOne(int gossip_id);
 
 public int insert(Gossip gossip);
 
 public int update(Gossip gossip);
 
-public int delete(int id);
+public int delete(int gossip_id);
 
 }

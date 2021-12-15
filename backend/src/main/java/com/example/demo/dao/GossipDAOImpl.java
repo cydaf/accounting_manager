@@ -22,13 +22,13 @@ public class GossipDAOImpl implements GossipDAO {
   private DataSource dataSource;
 
 //jdbc
-public Gossip findOne(int id) {
+public Gossip findOne(int gossip_id) {
     Gossip Gossip = new Gossip();
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "select id, title, content, date, user_id, user_name from gossip where id = ?";
+      String sql = "select g.* , count(l.user_id) as total from accounting.gossip g ,accounting.likelist l where g.gossip_id = l.gossip_id and l.gossip_id = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, id);
+      stmt.setInt(1, gossip_id);
       ResultSet rs = stmt.executeQuery();
       
       if (rs.next()) {
@@ -43,13 +43,13 @@ public Gossip findOne(int id) {
     return Gossip;
     
  }
+ 
  public List<Gossip> findAll() {
     List<Gossip> discussion = new ArrayList<Gossip>();
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "select id, title, content, date, user_id, user_name from gossip";
+      String sql = "select g.* , count(l.gossip_id) as total from gossip g left outer join likelist l on g.gossip_id = l.gossip_id group by g.gossip_id";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      
       ResultSet rs = stmt.executeQuery();
       while (rs.next()){
         discussion.add(getGossip(rs));
@@ -61,29 +61,31 @@ public Gossip findOne(int id) {
     }
        return discussion;
    }
+  
  public Gossip getGossip(ResultSet rs) throws SQLException{
     
     return new Gossip(
-      rs.getInt("id"),
+      rs.getInt("gossip_id"),
       rs.getString("title"),
       rs.getString("content"),
       rs.getDate("date"),
-      rs.getString("user_name"),
-      rs.getInt("user_id"));
+      rs.getInt("user_id"),
+      rs.getString("category"),
+      rs.getInt("total"));
 
  }
  public int insert(Gossip discussion) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "insert into gossip (id, title, content, date, user_id, user_name) values(?, ?, ?, ?, ?, ?)";
+      String sql = "insert into gossip (gossip_id, title, content, date, user_id, category) values(?, ?, ?, ?, ?, ?)";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, discussion.getId());
+      stmt.setInt(1, discussion.getgossip_Id());
       stmt.setString(2, discussion.getTitle());
       stmt.setString(3, discussion.getContent());
       stmt.setDate(4, discussion.getDate());
       stmt.setInt(5, discussion.getUser_id());
-      stmt.setString(6, discussion.getUser_name());
+      stmt.setString(6, discussion.getCategory());
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
@@ -96,12 +98,12 @@ public Gossip findOne(int id) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "update gossip set title=?, content=?, date=? where id =?";
+      String sql = "update gossip set title=?, content=?, date=? where gossip_id =?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setString(1, discussion.getTitle());
       stmt.setString(2, discussion.getContent());
       stmt.setDate(3, discussion.getDate());
-      stmt.setInt(4, discussion.getId());
+      stmt.setInt(4, discussion.getgossip_Id());
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
@@ -112,13 +114,13 @@ public Gossip findOne(int id) {
   
   }
   
-  public int delete(int id) {
+  public int delete(int gossip_id) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "delete from gossip where id =?";
+      String sql = "delete from gossip where gossip_id =?";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, id);
+      stmt.setInt(1, gossip_id);
       result = stmt.executeUpdate();
       conn.close(); // 關閉連結
     } catch(Exception e) {
