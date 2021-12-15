@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import AppMenu from '../component/AppMenu';
 import AddIcon from '@mui/icons-material/Add';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
+import TabSwitch from '../component/TabSwitch';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import CalendarPicker from '@mui/lab/CalendarPicker';
@@ -21,8 +22,7 @@ export default function RecordList() {
   const handleChange = (newDate) => {
     setDate(newDate);
   };
-  const onChangeDate = date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
-
+  const onChangeDate = date.getFullYear() + "/" + (date.getMonth()+1) + "/" + date.getDate();
 
   useEffect(() => {
     async function fetchData() {
