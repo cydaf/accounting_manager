@@ -5,7 +5,7 @@ import com.example.demo.entity.Record;
 
 public interface RecordDAO {
 
-public List<Record> findAll();
+public List<Record> findAll(String onChangeDate);
 
 public Record findOne(int id);
 

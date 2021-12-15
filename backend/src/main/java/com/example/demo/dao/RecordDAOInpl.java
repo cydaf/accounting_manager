@@ -43,12 +43,13 @@ public Record findOne(int id) {
     return Record;
     
  }
- public List<Record> findAll() {
+ public List<Record> findAll(String onChangeDate) {
     List<Record> Records = new ArrayList<Record>();
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "select id, user_id, price, category, descs, date, revenue from record";
+      String sql =("select id, user_id, price, category, descs, date, revenue from record where date = ?");
       PreparedStatement stmt = conn.prepareStatement(sql);
+      stmt.setString(1, onChangeDate);
       ResultSet rs = stmt.executeQuery();
       while (rs.next()){
         Records.add(getRecord(rs));

@@ -20,12 +20,12 @@ public class RecordController {
   RecordDAO dao;
 
   @GetMapping(value = "/Record")
-  public List<Record> retrieveRecords() throws SQLException{
-    return dao.findAll();
+  public List<Record> retrieveRecords(@RequestBody String onChangeDate) throws SQLException{
+    return dao.findAll(onChangeDate);
   }
 
   @GetMapping(value = "/RecordSum")
-  public int retrieveRecordSum() throws SQLException{
+  public int retrieveRecordSum() throws SQLException {
     return dao.setSum();
   }
 
