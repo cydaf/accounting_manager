@@ -14,24 +14,34 @@ import CalendarPicker from '@mui/lab/CalendarPicker';
 import Grid from '@mui/material/Grid';
 
 export default function RecordList() {
-  const [date, setDate] = React.useState(new Date());
+  const [date, setDate] = useState(new Date());
   const [records, setRecords] = useState([]);
+  const [sum, setSum] = useState();
   const [deleted, setDeleted] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const handleChange = (newDate) => {
-    setDate(newDate);
-  };
-  const onChangeDate = date.getFullYear() + "/" + (date.getMonth()+1) + "/" + date.getDate();
+  const onChangeDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
   useEffect(() => {
     async function fetchData() {
       const result = await axios.get("/Record");
+      const sumResult = await axios.get("/RecordSum");
       console.log(result.data);
       setRecords(result.data);
+      console.log(sumResult.data);
     }
     fetchData();
   }, [open, deleted]);
+
+  const handleChange = (newDate) => {
+    setDate(newDate);
+    // let newdate = newDate.getFullYear() + "-" + (newDate.getMonth()+1) + "-" + newDate.getDate();
+    // console.log("newdate: " + newdate);
+    // let result = records.filter((data) => {
+    //   return data.date.search(newdate) != -1;
+    // });
+    // setRecords(result);
+  };
 
   const addData = function () {
     setOpen(true);
@@ -77,30 +87,38 @@ export default function RecordList() {
         sx={{ width: '95%', margin: 'auto' }}
       >
 
-        {records.map((record, index) =>
-          <ListItem divider key={index} sx={{ px: 8, py: 3 }} className="list">
-            <ListItemText primaryTypographyProps={{ style: text }} primary={record.descs} className="fw-bold" secondary={
-              <React.Fragment>
-                <Typography
-                  sx={{ display: 'inline', fontWeight: 600 }}
-                  component="span"
-                  variant="body2"
-                  color="rgb(77, 77, 77)"
-                >
-                  價錢：{record.price} / 分類：{record.category} / 日期：{record.date}
-                </Typography>
-              </React.Fragment>
-            } ></ListItemText>
-            <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray"
-            // onClick={() => updateData(record)}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton edge="end" aria-label="delete" color="lightGray"
-              onClick={() => deleteData(record.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItem>)}
+        {records.filter((record) => {
+          if ( onChangeDate == record.date ) {
+            return record
+          } 
+        }).map((record, index) => {
+          return (
+            <ListItem divider key={index} sx={{ px: 8, py: 3 }} className="list">
+              <ListItemText primaryTypographyProps={{ style: text }} primary={record.descs} className="fw-bold"
+                secondary={
+                  <React.Fragment>
+                    <Typography
+                      sx={{ display: 'inline', fontWeight: 600 }}
+                      component="span"
+                      variant="body2"
+                      color="rgb(77, 77, 77)"
+                    >
+                      價錢：{record.price} / 分類：{record.category} / 日期：{record.date}
+                    </Typography>
+                  </React.Fragment>
+                }></ListItemText>
+              <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray"
+              // onClick={() => updateData(record)}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton edge="end" aria-label="delete" color="lightGray"
+                onClick={() => deleteData(record.id)}>
+                <DeleteIcon />
+              </IconButton>
+            </ListItem>
+          );
+        })}
 
       </List>
       <Fab color="primary" aria-label="add"
