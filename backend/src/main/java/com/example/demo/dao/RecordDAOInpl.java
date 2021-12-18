@@ -43,13 +43,14 @@ public Record findOne(int id) {
     return Record;
     
  }
- public List<Record> findAll(String onChangeDate) {
+ public List<Record> findAll(int user_id, String onChangeDate) {
     List<Record> Records = new ArrayList<Record>();
     try {
       Connection conn = dataSource.getConnection();
-      String sql =("select id, user_id, price, category, descs, date, revenue from record where date = ?");
+      String sql =("select id, user_id, price, category, descs, date, revenue from record where date = ? and user_id = ?");
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setString(1, onChangeDate);
+      stmt.setInt(2, user_id);
       ResultSet rs = stmt.executeQuery();
       while (rs.next()){
         Records.add(getRecord(rs));
@@ -71,12 +72,13 @@ public Record findOne(int id) {
       rs.getString("revenue"));
  }
 
- public int setSum() {
+ public int setSum(String onChangeDate) {
   int sum = 0;
   try {
     Connection conn = dataSource.getConnection();
-    String sql = "select price, date, revenue from record";
+    String sql = "select price, date, revenue from record where date = ?";
     PreparedStatement stmt = conn.prepareStatement(sql);
+    stmt.setString(1, onChangeDate);
     ResultSet rs = stmt.executeQuery();
     while (rs.next()){
       if(rs.getString("revenue").equals("expense"))
@@ -107,6 +109,7 @@ public Record findOne(int id) {
       stmt.setString(4, Record.getdescs());
       stmt.setDate(5, Record.getDate());
       stmt.setString(6, Record.getRevenue());
+      System.out.println(stmt);
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
@@ -126,6 +129,7 @@ public Record findOne(int id) {
       stmt.setString(3, Record.getcategory());
       stmt.setDate(4, Record.getDate());
       stmt.setInt(5, Record.getId());
+      System.out.println(stmt);
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
