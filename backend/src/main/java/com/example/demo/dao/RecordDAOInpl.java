@@ -103,7 +103,7 @@ public Record findOne(int id) {
       Connection conn = dataSource.getConnection();
       String sql = "insert into record (user_id, price, category, descs, date, revenue) values(?, ?, ?, ?, ?, ?)";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, Record.getId());
+      stmt.setString(1, Record.getuser_id());
       stmt.setInt(2, Record.getprice());
       stmt.setString(3, Record.getcategory());
       stmt.setString(4, Record.getdescs());
