@@ -5,7 +5,7 @@ import com.example.demo.entity.Gossip;
 
 public interface GossipDAO {
 
-public List<Gossip> findAll();
+public List<Gossip> findAll(int user_id);
 
 public Gossip findOne(int gossip_id);
 

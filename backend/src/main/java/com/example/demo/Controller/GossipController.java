@@ -19,14 +19,14 @@ public class GossipController {
   @Autowired
   GossipDAO dao;
 
-  @GetMapping(value = "/Gossip") // 列出全部
-  public List<Gossip> retrieveRecords() throws SQLException{
-      return dao.findAll();
+  @GetMapping(value = "/Gossip/{user_id}") // 列出全部
+  public List<Gossip> retrieveRecords(@PathVariable("user_id") int user_id) throws SQLException{
+      return dao.findAll(user_id);
   }
-  @GetMapping(value = {"/Gossip/{id}"}) // 列出其中一條
-  public Gossip retrieveOneRecord(@PathVariable("id") int id) throws SQLException{
-      return dao.findOne(id);
-  }
+//   @GetMapping(value = {"/Gossip/{id}"}) // 列出其中一條
+//   public Gossip retrieveOneRecord(@PathVariable("id") int id) throws SQLException{
+//       return dao.findOne(id);
+//   }
   @PostMapping(value = "/Gossip") // 新增
   public void processFormCreate(@RequestBody Gossip Gossip) throws SQLException {
       dao.insert(Gossip);

@@ -10,32 +10,34 @@ public class Gossip{
     private int user_id;
     private String category;
     private int total;
+    private int gossip_collected;
     
 
     public Gossip() {
  
     }
 
-    public Gossip(int gossip_id, String title, String content, Date date, int user_id,String category, int total) {
-        this.gossip_id = gossip_id;
+    public Gossip(int id, String title, String content, Date date, int user_id, String category, int total, int gossip_collected) {
+        this.gossip_id = id;
         this.title = title;
         this.content = content;
         this.date = date;
         this.user_id = user_id;
         this.category = category;
         this.total = total;
+        this.gossip_collected = gossip_collected;
     }
 
-    public int getgossip_Id() {
-        return this.gossip_id;
+    public int getGossip_id() {
+        return gossip_id;
     }
 
-    public void setgossip_Id(int gossip_id) {
-        this.gossip_id = gossip_id;
+    public void setGossip_id(int id){
+        this.gossip_id = id;
     }
 
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     public void setTitle(String title) {
@@ -43,7 +45,7 @@ public class Gossip{
     }
 
     public int getUser_id() {
-        return this.user_id;
+        return user_id;
     }
 
     public void setUser_id(int user_id) {
@@ -51,7 +53,7 @@ public class Gossip{
     }
 
     public String getContent() {
-        return this.content;
+        return content;
     }
 
     public void setContent(String content) {
@@ -59,7 +61,7 @@ public class Gossip{
     }
 
     public Date getDate() {
-        return this.date;
+        return date;
     }
 
     public void setDate(Date date) {
@@ -67,15 +69,19 @@ public class Gossip{
     }
 
     public String getCategory(){
-        return this.category;
-    }
-
-    public int getTotal(){
-        return this.total;
+        return category;
     }
 
     public void setCategory(String category){
         this.category = category;
+    }
+
+    public int getTotal(){
+        return total;
+    }
+
+    public int getGossip_collected(){
+        return gossip_collected;
     }
     
     public static void add(Gossip discussion) {

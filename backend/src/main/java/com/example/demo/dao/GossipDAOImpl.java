@@ -26,9 +26,14 @@ public Gossip findOne(int gossip_id) {
     Gossip Gossip = new Gossip();
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "select g.* , count(l.user_id) as total from accounting.gossip g ,accounting.likelist l where g.gossip_id = l.gossip_id and l.gossip_id = ?";
+      String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
+      "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
+      "left join accounting.user u on g.user_id = u.user_id "+ 
+      "left join accounting.collect c on c.user_id = 1 and c.gossip_id = g.gossip_id "+
+      "where g.gossip_id = l.gossip_id and u.user_id = g.user_id and l.gossip_id = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, gossip_id);
+      System.out.print(stmt);
       ResultSet rs = stmt.executeQuery();
       
       if (rs.next()) {
@@ -44,12 +49,17 @@ public Gossip findOne(int gossip_id) {
     
  }
  
- public List<Gossip> findAll() {
+ public List<Gossip> findAll(int user_id) {
     List<Gossip> discussion = new ArrayList<Gossip>();
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "select g.* , count(l.gossip_id) as total from gossip g left outer join likelist l on g.gossip_id = l.gossip_id group by g.gossip_id";
+      String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
+      "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
+      "left join accounting.user u on g.user_id = u.user_id "+ 
+      "left join accounting.collect c on c.user_id = ? and c.gossip_id = g.gossip_id "+
+      "group by g.gossip_id";
       PreparedStatement stmt = conn.prepareStatement(sql);
+      stmt.setInt(1, user_id);
       ResultSet rs = stmt.executeQuery();
       while (rs.next()){
         discussion.add(getGossip(rs));
@@ -71,21 +81,22 @@ public Gossip findOne(int gossip_id) {
       rs.getDate("date"),
       rs.getInt("user_id"),
       rs.getString("category"),
-      rs.getInt("total"));
+      rs.getInt("total"),
+      rs.getInt("gossip_collected"));
 
  }
  public int insert(Gossip discussion) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "insert into gossip (gossip_id, title, content, date, user_id, category) values(?, ?, ?, ?, ?, ?)";
+      String sql = "insert into gossip (title, content, date, user_id, category) values(?, ?, ?, ?, ?)";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, discussion.getgossip_Id());
-      stmt.setString(2, discussion.getTitle());
-      stmt.setString(3, discussion.getContent());
-      stmt.setDate(4, discussion.getDate());
-      stmt.setInt(5, discussion.getUser_id());
-      stmt.setString(6, discussion.getCategory());
+      stmt.setString(1, discussion.getTitle());
+      stmt.setString(2, discussion.getContent());
+      stmt.setDate(3, discussion.getDate());
+      stmt.setInt(4, discussion.getUser_id());
+      stmt.setString(5, discussion.getCategory());
+      System.out.println(stmt);
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
@@ -98,12 +109,14 @@ public Gossip findOne(int gossip_id) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "update gossip set title=?, content=?, date=? where gossip_id =?";
+      String sql = "update gossip set title =?, content =?, date =?, category =? where gossip_id =?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setString(1, discussion.getTitle());
       stmt.setString(2, discussion.getContent());
       stmt.setDate(3, discussion.getDate());
-      stmt.setInt(4, discussion.getgossip_Id());
+      stmt.setString(4,discussion.getCategory());
+      stmt.setInt(5, discussion.getGossip_id());
+      System.out.print(stmt);
       result = stmt.executeUpdate();
     } catch(Exception e) {
       //something wrong
