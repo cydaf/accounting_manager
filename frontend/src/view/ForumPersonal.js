@@ -9,7 +9,7 @@ import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link } from "react-router-dom";
 
-export default function ForumIndex() {
+export default function ForumPersonal() {
 
   const [article, setArticle] = useState([]);
 
@@ -66,7 +66,7 @@ export default function ForumIndex() {
         })}
 
       </Container>
-
+      <h2>個人發的文章還沒完成！施工中！</h2>
       <Fab
         color="primary"
         aria-label="add"
@@ -81,7 +81,7 @@ export default function ForumIndex() {
       </Fab>
       <Fab
         component={Link}
-        to="./Collect"
+        to="../Collect"
         color="secondary"
         aria-label="add"
         sx={{
@@ -97,7 +97,7 @@ export default function ForumIndex() {
       <Fab
         color="lightblue"
         component={Link}
-        to="./Personal"
+        to="../Personal"
         aria-label="add"
         sx={{
           position: "fixed",

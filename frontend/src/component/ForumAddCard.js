@@ -22,21 +22,21 @@ export default function ForumAddCard(props) {
   const date = new Date();
   const [article, setArticle] = useState({
     id: 3,
-    date:
-      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
+    date:date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
     title: "",
     content: "",
-    user_name: "andy 會刪掉",
+    category:"理財",
+    user_id: "1", // 先把使用者寫死
   });
 
   const update = async function () {
     try {
       if (article.title) {
         await axios.post("/Gossip", article);
+        handleClose(true)
       }
     } catch (e) {
       alert("post failed");
-      console.log(e);
     }
   };
 
@@ -44,9 +44,6 @@ export default function ForumAddCard(props) {
     setArticle({ ...article, [e.target.name]: e.target.value });
   };
   const handleCate = function (e, value) {
-    console.log(value);
-
-    // const cate =
     const cate = value.map((item) => {
       return Object.values(item)[0];
     });

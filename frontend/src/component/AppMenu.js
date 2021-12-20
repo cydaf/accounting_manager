@@ -11,7 +11,7 @@ export default function AppMenu() {
         <Button component={Link} to="../" color="inherit">
           消費紀錄
         </Button>
-        <Button component={Link} to="../forumIndex" color="inherit">
+        <Button component={Link} to="../ForumIndex" color="inherit">
           志同道合
         </Button>
         {/* 項目至右 */}
