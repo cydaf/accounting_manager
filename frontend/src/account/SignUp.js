@@ -11,24 +11,45 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Slider from "@mui/material/Slider";
+import axios from 'axios';
 
 import AppMenu from "../component/AppMenu";
 
-export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+export default function SignUp(props) {
+  const [account, setAccount] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [gender, setGender] = React.useState("female");
+  const [age, setAge] = React.useState(50);
+
+  //按下註冊按鈕
+  // const Submit = (event) => {
+    const Submit = async function () {
+
+      const user = { account: account, password: password, gender: gender, age: age };
+        console.log(user)
+      try{
+        await axios.post("/user",user);
+      }
+      catch(e){
+        console.log(e);
+      }
+      // props.close();
+    
   };
 
   return (
     <Box>
       <AppMenu />
-      <Container component="main" maxWidth="xs" sx={{bgcolor:"rgba(128, 128, 128, 0.3)",borderRadius: 5}}>
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{ bgcolor: "rgba(128, 128, 128, 0.3)", borderRadius: 5 }}
+      >
         <CssBaseline />
         <Box
           sx={{
@@ -36,45 +57,27 @@ export default function SignUp() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            height: '60vh'
+            height: "70vh",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main", marginTop: 3,}}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main", marginTop: 3 }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5" fontWeight="700" color="primary">
+          <Typography
+            component="h1"
+            variant="h5"
+            fontWeight="700"
+            color="primary"
+          >
             R . E . G . I . S . T . E . R
           </Typography>
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={Submit}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  sx={{bgcolor:"#fff"}}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                  sx={{bgcolor:"#fff"}}
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -83,7 +86,12 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  sx={{bgcolor:"#fff"}}
+                  sx={{ bgcolor: "#fff" }}
+                  value = {account}
+                  onChange={(e) => {
+                    setAccount(e.target.value)
+                    }
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -95,7 +103,49 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
-                  sx={{bgcolor:"#fff"}}
+                  sx={{ bgcolor: "#fff" }}
+                  value = {password}
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                    }
+                  }
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormLabel component="legend">Gender</FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="gender"
+                  value={gender}
+                  onChange={(e) => {
+                    setGender(e.target.value)
+                    }
+                  }
+                >
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                </RadioGroup>
+              </Grid>
+              <Grid item xs={12}>
+                <FormLabel component="legend">Age</FormLabel>
+                <Slider
+                  defaultValue={50}
+                  aria-label="Default"
+                  valueLabelDisplay="on"
+                  value={age}
+                  onChange={(e) => {
+                    setAge(e.target.value)
+                    }
+                  }
                 />
               </Grid>
             </Grid>
