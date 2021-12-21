@@ -19,9 +19,9 @@ public class RecordController {
   @Autowired
   RecordDAO dao;
 
-  @GetMapping(value = "/RecordSum")
-  public int retrieveRecordSum(@RequestBody String onChangeDate) throws SQLException {
-    return dao.setSum(onChangeDate);
+  @GetMapping(value = "/RecordSum/{id}/date/{date}")
+  public int retrieveRecordSum(@PathVariable("id") int id, @PathVariable("date") String date) throws SQLException {
+    return dao.setSum(id, date);
   }
 
   @GetMapping(value = "/Record/{id}/date/{date}")

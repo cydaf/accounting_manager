@@ -73,13 +73,14 @@ public Record findOne(int id) {
       rs.getString("revenue"));
  }
 
- public int setSum(String onChangeDate) {
+ public int setSum(int user_id,String onChangeDate) {
   int sum = 0;
   try {
     Connection conn = dataSource.getConnection();
-    String sql = "select price, date, revenue from record where date = ?";
+    String sql = "select price, date, revenue from record where date = ? and user_id =?";
     PreparedStatement stmt = conn.prepareStatement(sql);
     stmt.setString(1, onChangeDate);
+    stmt.setInt(2, user_id);
     ResultSet rs = stmt.executeQuery();
     while (rs.next()){
       if(rs.getString("revenue").equals("expense"))
