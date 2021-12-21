@@ -48,6 +48,29 @@ public Gossip findOne(int gossip_id) {
     return Gossip;
     
  }
+
+ public List<Gossip> showPersonal(int user_id) {
+  List<Gossip> discussion = new ArrayList<Gossip>();
+  try {
+    Connection conn = dataSource.getConnection();
+    String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
+    "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
+    "left join accounting.user u on g.user_id = u.user_id "+ 
+    "left join accounting.collect c on c.user_id = ? and c.gossip_id = g.gossip_id "+
+    "group by g.gossip_id";
+    PreparedStatement stmt = conn.prepareStatement(sql);
+    stmt.setInt(1, user_id);
+    ResultSet rs = stmt.executeQuery();
+    while (rs.next()){
+      discussion.add(getGossip(rs));
+    }
+    conn.close();
+  } catch(Exception e) {
+      //something wrong
+      System.out.println(e);
+  }
+     return discussion;
+ }
  
  public List<Gossip> findAll(int user_id) {
     List<Gossip> discussion = new ArrayList<Gossip>();
@@ -56,7 +79,7 @@ public Gossip findOne(int gossip_id) {
       String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
       "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
       "left join accounting.user u on g.user_id = u.user_id "+ 
-      "left join accounting.collect c on c.user_id = ? and c.gossip_id = g.gossip_id "+
+      "left join accounting.collect c on c.user_id = ? and iscollect = 1 and c.gossip_id = g.gossip_id "+
       "group by g.gossip_id";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, user_id);
@@ -106,6 +129,7 @@ public Gossip findOne(int gossip_id) {
     return result;
   
   }
+  
   public int update(Gossip discussion) {
     int result = 0;
     try {
