@@ -56,7 +56,7 @@ public Gossip findOne(int gossip_id) {
     String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
     "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
     "left join accounting.user u on g.user_id = u.user_id "+ 
-    "left join accounting.collect c on c.user_id = ? and c.gossip_id = g.gossip_id "+
+    "inner join accounting.collect c on c.user_id = ? and iscollect = 1 and c.gossip_id = g.gossip_id "+
     "group by g.gossip_id";
     PreparedStatement stmt = conn.prepareStatement(sql);
     stmt.setInt(1, user_id);
