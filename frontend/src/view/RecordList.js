@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Box, List, ListItem, ListItemText, Fab, IconButton } from '@mui/material';
-import { Link } from "react-router-dom";
 
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
@@ -24,8 +23,11 @@ export default function RecordList() {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (refresh=false) => {
     setOpen(false);
+    if(refresh){
+      fetchData()
+    }
   };
 
   const onChangeDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
@@ -39,14 +41,11 @@ export default function RecordList() {
   }, [open, deleted, date]);
 
   async function fetchData() {
-    console.log(onChangeDate);
-    // const result = await axios.get("/Record/" + onChangeDate);
-    const result = await axios.get("/Record/"+1+"/date/"+onChangeDate);
+    const result = await axios.get("/Record/" + 1 + "/date/" + onChangeDate);
     // const sumResult = await axios.get("/RecordSum");
     console.log(result.data);
     setRecords(result.data);
     // console.log(sumResult.data);
-  // console.log(onChangeDate);
   }
 
   // 刪除
@@ -60,8 +59,8 @@ export default function RecordList() {
   }
 
   // 修改
-  const updateData = function(record) {
-    setRecords(record);
+  const updateData = function (temp) {
+    setRecords(temp);
     setOpen(true);
   }
 
@@ -85,40 +84,31 @@ export default function RecordList() {
         sx={{ width: '95%', margin: 'auto' }}
       >
 
-        {records
-        // .filter((record) => {
-        //   if ( onChangeDate == record.date ) {
-        //     return record
-        //   } 
-        // })
-        .map((record, index) => 
-        // {
-          // return (
-            <ListItem divider key={index} sx={{ px: 8, py: 3 }} className="list">
-              <ListItemText primaryTypographyProps={{ style: text }} primary={record.descs} className="fw-bold"
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      sx={{ display: 'inline', fontWeight: 600 }}
-                      component="span"
-                      variant="body2"
-                      color="rgb(77, 77, 77)"
-                    >
-                      價錢：{record.price} / 分類：{record.category} / 日期：{record.date}
-                    </Typography>
-                  </React.Fragment>
-                }></ListItemText>
-              <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray"
+        {records.map((record, index) =>
+          <ListItem divider key={index} sx={{ px: 8, py: 3 }} className="list">
+            <ListItemText primaryTypographyProps={{ style: text }} primary={record.descs} className="fw-bold"
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    sx={{ display: 'inline', fontWeight: 600 }}
+                    component="span"
+                    variant="body2"
+                    color="rgb(77, 77, 77)"
+                  >
+                    價錢：{record.price} / 分類：{record.category} / 日期：{record.date}
+                  </Typography>
+                </React.Fragment>
+              }></ListItemText>
+            <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray"
               onClick={() => updateData(record)}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton edge="end" aria-label="delete" color="lightGray"
-                onClick={() => deleteData(record.id)}>
-                <DeleteIcon />
-              </IconButton>
-            </ListItem>
-          // );
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton edge="end" aria-label="delete" color="lightGray"
+              onClick={() => deleteData(record.id)}>
+              <DeleteIcon />
+            </IconButton>
+          </ListItem>
         )}
 
       </List>
@@ -133,8 +123,8 @@ export default function RecordList() {
         }}>
         <AddIcon />
       </Fab>
-      <TabSwitch open={open} onClose={handleClose} 
-      record={records} 
+      <TabSwitch open={open} onClose={handleClose}
+        record={records}
       />
     </Box>
 
