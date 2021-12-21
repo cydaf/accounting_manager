@@ -1,10 +1,9 @@
 import * as React from "react";
+import {useState, useContext} from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -19,21 +18,29 @@ import Slider from "@mui/material/Slider";
 import axios from 'axios';
 
 import AppMenu from "../component/AppMenu";
+import {AuthContext, STATUS} from '../account/AuthContext';
 
 export default function SignUp(props) {
+  const authContext = useContext(AuthContext);
+  const [name, setName] = React.useState("");
   const [account, setAccount] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [gender, setGender] = React.useState("female");
-  const [age, setAge] = React.useState(50);
+  // const [gender, setGender] = React.useState("1");
+  // const [age, setAge] = React.useState("50");
 
   //按下註冊按鈕
   // const Submit = (event) => {
     const Submit = async function () {
 
-      const user = { account: account, password: password, gender: gender, age: age };
-        console.log(user)
+      const user = { name: name, account: account, password: password};
+      console.log(user);
+      this.props.history.replace("/SignIn");
       try{
-        await axios.post("/user",user);
+        const Auth = await axios.post("/user",user);
+        authContext.setStatus(STATUS.toSignIn);
+        if(Auth){
+          console.log("註冊成功");
+        }
       }
       catch(e){
         console.log(e);
@@ -53,11 +60,11 @@ export default function SignUp(props) {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            height: "70vh",
+            height: "60vh",
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main", marginTop: 3 }}>
@@ -78,6 +85,22 @@ export default function SignUp(props) {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="name"
+                  label="userName"
+                  name="name"
+                  autoComplete="name"
+                  sx={{ bgcolor: "#fff" }}
+                  value = {name}
+                  onChange={(e) => {
+                    setName(e.target.value)
+                    }
+                  }
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -111,7 +134,7 @@ export default function SignUp(props) {
                   }
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormLabel component="legend">Gender</FormLabel>
                 <RadioGroup
                   row
@@ -124,18 +147,18 @@ export default function SignUp(props) {
                   }
                 >
                   <FormControlLabel
-                    value="female"
+                    value="1"
                     control={<Radio />}
                     label="Female"
                   />
                   <FormControlLabel
-                    value="male"
+                    value="0"
                     control={<Radio />}
                     label="Male"
                   />
                 </RadioGroup>
-              </Grid>
-              <Grid item xs={12}>
+              </Grid> */}
+              {/* <Grid item xs={12}>
                 <FormLabel component="legend">Age</FormLabel>
                 <Slider
                   defaultValue={50}
@@ -147,7 +170,7 @@ export default function SignUp(props) {
                     }
                   }
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
             <Button
               type="submit"
