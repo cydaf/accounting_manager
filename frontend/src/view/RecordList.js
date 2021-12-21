@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Box, List, ListItem, ListItemText, Fab, IconButton } from '@mui/material';
 import { Link } from "react-router-dom";
 
@@ -20,35 +20,33 @@ export default function RecordList() {
   const [deleted, setDeleted] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const onChangeDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await axios.get("/Record");
-      const sumResult = await axios.get("/RecordSum");
-      console.log(result.data);
-      setRecords(result.data);
-      console.log(sumResult.data);
-    }
-    fetchData();
-  }, [open, deleted]);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const onChangeDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
   const handleChange = (newDate) => {
     setDate(newDate);
-    // let newdate = newDate.getFullYear() + "-" + (newDate.getMonth()+1) + "-" + newDate.getDate();
-    // console.log("newdate: " + newdate);
-    // let result = records.filter((data) => {
-    //   return data.date.search(newdate) != -1;
-    // });
-    // setRecords(result);
   };
 
-  const addData = function () {
-    setOpen(true);
-  }
+  useEffect(() => {
+    fetchData();
+  }, [open, deleted, date]);
 
-  const close = function () {
-    setOpen(false);
+  async function fetchData() {
+    console.log(onChangeDate);
+    // const result = await axios.get("/Record/" + onChangeDate);
+    const result = await axios.get("/Record/"+1+"/date/"+onChangeDate);
+    // const sumResult = await axios.get("/RecordSum");
+    console.log(result.data);
+    setRecords(result.data);
+    // console.log(sumResult.data);
+  // console.log(onChangeDate);
   }
 
   // 刪除
@@ -62,10 +60,10 @@ export default function RecordList() {
   }
 
   // 修改
-  // const updateData = function(customer) {
-  //   setCurrentCustomer(customer);
-  //   setOpen(true);
-  // }
+  const updateData = function(record) {
+    setRecords(record);
+    setOpen(true);
+  }
 
   const text = {
     color: "#0D1B2A",
@@ -87,12 +85,15 @@ export default function RecordList() {
         sx={{ width: '95%', margin: 'auto' }}
       >
 
-        {records.filter((record) => {
-          if ( onChangeDate == record.date ) {
-            return record
-          } 
-        }).map((record, index) => {
-          return (
+        {records
+        // .filter((record) => {
+        //   if ( onChangeDate == record.date ) {
+        //     return record
+        //   } 
+        // })
+        .map((record, index) => 
+        // {
+          // return (
             <ListItem divider key={index} sx={{ px: 8, py: 3 }} className="list">
               <ListItemText primaryTypographyProps={{ style: text }} primary={record.descs} className="fw-bold"
                 secondary={
@@ -108,7 +109,7 @@ export default function RecordList() {
                   </React.Fragment>
                 }></ListItemText>
               <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray"
-              // onClick={() => updateData(record)}
+              onClick={() => updateData(record)}
               >
                 <EditIcon />
               </IconButton>
@@ -117,14 +118,14 @@ export default function RecordList() {
                 <DeleteIcon />
               </IconButton>
             </ListItem>
-          );
-        })}
+          // );
+        )}
 
       </List>
       <Fab color="primary" aria-label="add"
-        component={Link}
-        to="../TabSwitch"
-        // onClick={addData}
+        // component={Link}
+        // to="../TabSwitch"
+        onClick={handleClickOpen}
         sx={{
           position: "fixed",
           bottom: (theme) => theme.spacing(2),
@@ -132,7 +133,9 @@ export default function RecordList() {
         }}>
         <AddIcon />
       </Fab>
-      {/* <TabSwitch open={open} close={close} /> */}
+      <TabSwitch open={open} onClose={handleClose} 
+      record={records} 
+      />
     </Box>
 
 
