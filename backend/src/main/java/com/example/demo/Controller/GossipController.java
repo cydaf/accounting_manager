@@ -29,8 +29,14 @@ public class GossipController {
     //   }
     @GetMapping(value = "/Gossip/archieve/{user_id}") // 列出典藏
     public List<Gossip> retrievearchive(@PathVariable("user_id") int user_id) throws SQLException{
+        return dao.showArchieve(user_id);
+    }
+
+    @GetMapping(value = "/Gossip/personal/{user_id}") // 列出典藏
+    public List<Gossip> retrievePersonal(@PathVariable("user_id") int user_id) throws SQLException{
         return dao.showPersonal(user_id);
     }
+
     @PostMapping(value = "/Gossip") // 新增
     public void processFormCreate(@RequestBody Gossip Gossip) throws SQLException {
         dao.insert(Gossip);
