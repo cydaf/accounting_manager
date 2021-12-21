@@ -34,7 +34,7 @@ public Record findOne(int id) {
       if (rs.next()) {
         Record = getRecord(rs);
       }
-
+      conn.close();
     } catch(Exception e) {
       //something wrong
       System.out.println(e);
@@ -55,6 +55,7 @@ public Record findOne(int id) {
       while (rs.next()){
         Records.add(getRecord(rs));
       }
+      conn.close();
     } catch(Exception e) {
         //something wrong
         System.out.println(e);
@@ -90,6 +91,7 @@ public Record findOne(int id) {
         sum += rs.getInt("price");
       }
     }
+    conn.close();
   } catch(Exception e) {
       //something wrong
       System.out.println(e);
@@ -111,6 +113,7 @@ public Record findOne(int id) {
       stmt.setString(6, Record.getRevenue());
       System.out.println(stmt);
       result = stmt.executeUpdate();
+      conn.close();
     } catch(Exception e) {
       //something wrong
       System.out.println(e);
@@ -131,6 +134,7 @@ public Record findOne(int id) {
       stmt.setInt(5, Record.getId());
       System.out.println(stmt);
       result = stmt.executeUpdate();
+      conn.close();
     } catch(Exception e) {
       //something wrong
       System.out.println(e);
@@ -146,6 +150,7 @@ public Record findOne(int id) {
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, id);
       result = stmt.executeUpdate();
+      conn.close();
     } catch(Exception e) {
       //something wrong
       System.out.println(e);
