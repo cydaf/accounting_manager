@@ -1,10 +1,9 @@
 import * as React from "react";
+import {useState, useContext} from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,20 +11,50 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import SendIcon from '@mui/icons-material/Send';
+import axios from 'axios';
 
 import AppMenu from "../component/AppMenu";
+import {AuthContext, STATUS} from '../account/AuthContext';
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
 
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   // eslint-disable-next-line no-console
+  //   console.log({
+  //     email: data.get("email"),
+  //     password: data.get("password"),
+  //   });
+  // };
+  const authContext = useContext(AuthContext);
+  const [account, setAccount] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [message, setMessage] = useState("");
+  //登入
+  const handleSubmit = async function(){
+    let auth = { account: account, password: password};
+    try {
+      // get user資料
+      const res = await axios.get("/user",auth);
+      console.log(auth);
+      if (res) {
+        console.log(res);
+        console.log(res.statusText);
+        setMessage(res.data);
+        //不確定需不需要改狀態
+        authContext.setStatus(STATUS.toSignOut);
+      }
+    }
+    catch(error){
+      console.log(error);
+      setMessage("登入資料有誤");
+    }
+  }
+  //註冊
+  const changeStatus = function(){
+    authContext.setStatus(STATUS.toSignUp);
+  }
   return (
     <Box>
       <AppMenu />
@@ -63,7 +92,10 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
               sx={{bgcolor:"#fff"}}
-              
+              onChange={(e) => {
+                setAccount(e.target.value)
+                }
+              }
             />
             <TextField
               margin="normal"
@@ -75,6 +107,10 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
               sx={{bgcolor:"#fff"}}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                }
+              }
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -87,17 +123,19 @@ export default function SignIn() {
               color="primary"
               sx={{ mt: 3, mb: 2 }}
               endIcon={<SendIcon />}
+              // onClick={handleSubmit}
             >
               LOGIN
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  忘記密碼？
-                </Link>
+              <Typography
+              color="red">
+                  {message}
+              </Typography>
               </Grid>
               <Grid item>
-                <Link href ="./SignUp" variant="body2">
+                <Link href ="./SignUp" variant="contained" onClick={changeStatus}>
                   還沒有帳號是吧？ 註冊
                 </Link>
               </Grid>
