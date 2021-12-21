@@ -39,7 +39,7 @@ public Gossip findOne(int gossip_id) {
       if (rs.next()) {
         Gossip = getGossip(rs);
       }
-
+      conn.close();
     } catch(Exception e) {
       //something wrong
       System.out.println(e);
@@ -64,7 +64,7 @@ public Gossip findOne(int gossip_id) {
       while (rs.next()){
         discussion.add(getGossip(rs));
       }
-  
+      conn.close();
     } catch(Exception e) {
         //something wrong
         System.out.println(e);
@@ -98,6 +98,7 @@ public Gossip findOne(int gossip_id) {
       stmt.setString(5, discussion.getCategory());
       System.out.println(stmt);
       result = stmt.executeUpdate();
+      conn.close();
     } catch(Exception e) {
       //something wrong
       System.out.println(e);
@@ -118,6 +119,7 @@ public Gossip findOne(int gossip_id) {
       stmt.setInt(5, discussion.getGossip_id());
       System.out.print(stmt);
       result = stmt.executeUpdate();
+      conn.close();
     } catch(Exception e) {
       //something wrong
       System.out.println(e);
