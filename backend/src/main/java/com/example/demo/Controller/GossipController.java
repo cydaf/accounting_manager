@@ -16,23 +16,21 @@ import com.example.demo.entity.Gossip;
 
 @RestController
 public class GossipController {  
-  @Autowired
-  GossipDAO dao;
+  
+    @Autowired
+    GossipDAO dao;
 
     @GetMapping(value = "/Gossip/{user_id}") // 列出全部
     public List<Gossip> retrieveRecords(@PathVariable("user_id") int user_id) throws SQLException{
         return dao.findAll(user_id);
     }
-    //   @GetMapping(value = {"/Gossip/{id}"}) // 列出其中一條
-    //   public Gossip retrieveOneRecord(@PathVariable("id") int id) throws SQLException{
-    //       return dao.findOne(id);
-    //   }
+
     @GetMapping(value = "/Gossip/archieve/{user_id}") // 列出典藏
     public List<Gossip> retrievearchive(@PathVariable("user_id") int user_id) throws SQLException{
         return dao.showArchieve(user_id);
     }
 
-    @GetMapping(value = "/Gossip/personal/{user_id}") // 列出典藏
+    @GetMapping(value = "/Gossip/personal/{user_id}") // 列出已發表
     public List<Gossip> retrievePersonal(@PathVariable("user_id") int user_id) throws SQLException{
         return dao.showPersonal(user_id);
     }
@@ -41,12 +39,22 @@ public class GossipController {
     public void processFormCreate(@RequestBody Gossip Gossip) throws SQLException {
         dao.insert(Gossip);
     }
-    
-    @PutMapping(value = "/Gossip") // 修改
+
+    @PutMapping(value = "/Gossip") // 修改文章
     public void processFormUpdate(@RequestBody Gossip Gossip) throws SQLException {
         dao.update(Gossip);
     }
-    
+
+    @PutMapping(value = "/Gossip/like") // 修改喜歡
+    public void processlikeUpdate(@RequestBody Gossip Gossip) throws SQLException {
+        dao.updateLike(Gossip);
+    }
+
+    @PutMapping(value = "/Gossip/collect") // 修改收藏
+    public void processcollectUpdate(@RequestBody Gossip Gossip) throws SQLException {
+        dao.updateCollect(Gossip);
+    }
+
     @DeleteMapping(value = "/Gossip/{id}") // 刪除
     public void deleteGossip(@PathVariable("id") int id) {
         dao.delete(id);

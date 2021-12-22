@@ -15,71 +15,26 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Gossip;
 
+
 @Repository
-public class GossipDAOImpl implements GossipDAO {
+public class GossipDAOImpl implements GossipDAO{
 
   @Autowired
   private DataSource dataSource;
 
 //jdbc
-public Gossip findOne(int gossip_id) {
-    Gossip Gossip = new Gossip();
-    try {
-      Connection conn = dataSource.getConnection();
-      String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
-      "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
-      "left join accounting.user u on g.user_id = u.user_id "+ 
-      "left join accounting.collect c on c.user_id = 1 and c.gossip_id = g.gossip_id "+
-      "where g.gossip_id = l.gossip_id and u.user_id = g.user_id and l.gossip_id = ?";
-      PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, gossip_id);
-      System.out.print(stmt);
-      ResultSet rs = stmt.executeQuery();
-      
-      if (rs.next()) {
-        Gossip = getGossip(rs);
-      }
-      conn.close();
-    } catch(Exception e) {
-      //something wrong
-      System.out.println(e);
-    }
 
-    return Gossip;
-    
- }
-
+ // 列出使用者所有典藏
  public List<Gossip> showArchieve(int user_id) {
   List<Gossip> discussion = new ArrayList<Gossip>();
   try {
     Connection conn = dataSource.getConnection();
-    String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
-    "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
-    "left join accounting.user u on g.user_id = u.user_id "+ 
-    "inner join accounting.collect c on c.user_id = ? and iscollect = 1 and c.gossip_id = g.gossip_id "+
-    "group by g.gossip_id";
-    PreparedStatement stmt = conn.prepareStatement(sql);
-    stmt.setInt(1, user_id);
-    ResultSet rs = stmt.executeQuery();
-    while (rs.next()){
-      discussion.add(getGossip(rs));
-    }
-    conn.close();
-  } catch(Exception e) {
-      //something wrong
-      System.out.println(e);
-  }
-     return discussion;
- }
-
- public List<Gossip> showPersonal(int user_id) {
-  List<Gossip> discussion = new ArrayList<Gossip>();
-  try {
-    Connection conn = dataSource.getConnection();
-    String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
-    "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
-    "inner join accounting.user u on g.user_id = u.user_id and g.user_id = ? "+ 
-    "left join accounting.collect c on c.user_id = ? and iscollect = 1 and c.gossip_id = g.gossip_id "+
+    String sql = "select g.*, u.name as author, count(totallike.gossip_id) as total, c.iscollect, personlike.islike "+ 
+    "from accounting.gossip g "+
+    "left join accounting.likelist totallike on totallike.islike = 1 and totallike.gossip_id = g.gossip_id "+
+    "left join accounting.likelist personlike on personlike.islike = 1 and personlike.user_id = ? and personlike.gossip_id = g.gossip_id "+
+    "inner join accounting.collect c on c.user_id = ? and c.iscollect = 1 and c.gossip_id = g.gossip_id "+
+    "inner join accounting.user u on u.user_id = g.user_id "+
     "group by g.gossip_id";
     PreparedStatement stmt = conn.prepareStatement(sql);
     stmt.setInt(1, user_id);
@@ -95,43 +50,78 @@ public Gossip findOne(int gossip_id) {
   }
      return discussion;
  }
- 
- public List<Gossip> findAll(int user_id) {
-    List<Gossip> discussion = new ArrayList<Gossip>();
-    try {
-      Connection conn = dataSource.getConnection();
-      String sql = "select c.gossip_id as gossip_collected, u.name as author,g.*, count(l.user_id) as total from accounting.gossip g "+
-      "left join accounting.likelist l on l.islike = 1 and l.gossip_id = g.gossip_id "+
-      "left join accounting.user u on g.user_id = u.user_id "+ 
-      "left join accounting.collect c on c.user_id = ? and iscollect = 1 and c.gossip_id = g.gossip_id "+
-      "group by g.gossip_id";
-      PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, user_id);
-      ResultSet rs = stmt.executeQuery();
-      while (rs.next()){
-        discussion.add(getGossip(rs));
-      }
-      conn.close();
-    } catch(Exception e) {
-        //something wrong
-        System.out.println(e);
+
+ // 列出使用者自己發表的文章
+ public List<Gossip> showPersonal(int user_id) {
+  List<Gossip> discussion = new ArrayList<Gossip>();
+  try {
+    Connection conn = dataSource.getConnection();
+    String sql = "select g.*, u.name as author, count(totallike.gossip_id) as total, c.iscollect, personlike.islike "+
+    "from accounting.gossip g "+
+    "left join accounting.likelist totallike on totallike.islike = 1 and totallike.gossip_id = g.gossip_id "+ 
+    "left join accounting.likelist personlike on personlike.islike = 1 and personlike.user_id = ? and personlike.gossip_id = g.gossip_id "+
+    "left join accounting.collect c on c.iscollect = 1 and c.user_id = ? and c.gossip_id = g.gossip_id "+
+    "inner join accounting.user u on u.user_id = g.user_id and u.user_id = ? "+
+    "group by g.gossip_id";
+    PreparedStatement stmt = conn.prepareStatement(sql);
+    stmt.setInt(1, user_id);
+    stmt.setInt(2, user_id);
+    stmt.setInt(3, user_id);
+    ResultSet rs = stmt.executeQuery();
+    while (rs.next()){
+      discussion.add(getGossip(rs));
     }
-       return discussion;
-   }
+    conn.close();
+  } catch(Exception e) {
+      //something wrong
+      System.out.println(e);
+  }
+     return discussion;
+ }
+
+//列出討論板所有的文章
+public List<Gossip> findAll(int user_id) {
+  List<Gossip> discussion = new ArrayList<Gossip>();
+  try {
+    Connection conn = dataSource.getConnection();
+    String sql = "select g.*, u.name as author, count(totallike.gossip_id) as total, c.iscollect, personlike.islike "+
+    "from accounting.gossip g "+
+    "left join accounting.likelist totallike on totallike.islike = 1 and totallike.gossip_id = g.gossip_id "+
+    "left join accounting.likelist personlike on personlike.islike = 1 and personlike.user_id = ? and personlike.gossip_id = g.gossip_id "+
+    "left join accounting.collect c on c.iscollect = 1 and c.user_id = ? and c.gossip_id = g.gossip_id "+
+    "inner join accounting.user u on u.user_id = g.user_id "+
+    "group by g.gossip_id";
+    PreparedStatement stmt = conn.prepareStatement(sql);
+    stmt.setInt(1, user_id);
+    stmt.setInt(2, user_id);
+    ResultSet rs = stmt.executeQuery();
+    while (rs.next()){
+      discussion.add(getGossip(rs));
+    }
+    conn.close();
+  } catch(Exception e) {
+      //something wrong
+      System.out.println(e);
+  }
+      return discussion;
+}
   
  public Gossip getGossip(ResultSet rs) throws SQLException{
-    
-    return new Gossip(
-      rs.getInt("gossip_id"),
-      rs.getString("title"),
-      rs.getString("content"),
-      rs.getDate("date"),
-      rs.getInt("user_id"),
-      rs.getString("category"),
-      rs.getInt("total"),
-      rs.getInt("gossip_collected"));
+  
+  return new Gossip(
+    rs.getInt("gossip_id"),
+    rs.getString("title"),
+    rs.getString("content"),
+    rs.getDate("date"),
+    rs.getInt("user_id"),
+    rs.getString("category"),
+    rs.getString("author"),
+    rs.getInt("total"),
+    rs.getInt("iscollect"),
+    rs.getInt("islike"));
 
  }
+
  public int insert(Gossip discussion) {
     int result = 0;
     try {
@@ -173,8 +163,45 @@ public Gossip findOne(int gossip_id) {
       System.out.println(e);
     }
     return result;
-  
-  
+  }
+
+  public int updateCollect(Gossip discussion) {
+    int result = 0;
+    try {
+      System.out.print(discussion);
+      Connection conn = dataSource.getConnection();
+      String sql = "update collect set iscollect =? where gossip_id =? and user_id = ?";
+      PreparedStatement stmt = conn.prepareStatement(sql);
+      stmt.setInt(1, discussion.getIscollect());
+      stmt.setInt(2, discussion.getGossip_id());
+      stmt.setInt(3, discussion.getUser_id());
+      System.out.print(stmt);
+      result = stmt.executeUpdate();
+      conn.close();
+    } catch(Exception e) {
+      //something wrong
+      System.out.println(e);
+    }
+    return result;
+  }
+
+  public int updateLike(Gossip discussion) {
+    int result = 0;
+    try {
+      Connection conn = dataSource.getConnection();
+      String sql = "update likelist set islike =? where gossip_id =? and user_id = ?";
+      PreparedStatement stmt = conn.prepareStatement(sql);
+      stmt.setInt(1, discussion.getIslike());
+      stmt.setInt(2, discussion.getGossip_id());
+      stmt.setInt(3, discussion.getUser_id());
+      System.out.print(stmt);
+      result = stmt.executeUpdate();
+      conn.close();
+    } catch(Exception e) {
+      //something wrong
+      System.out.println(e);
+    }
+    return result;
   }
   
   public int delete(int gossip_id) {

@@ -9,51 +9,37 @@ public class Gossip{
     private Date date;
     private int user_id;
     private String category;
+    private String author;
     private int total;
-    private int gossip_collected;
-    
+    private int islike;
+    private int iscollect;
 
-    public Gossip() {
- 
+    public int getIscollect() {
+        return this.iscollect;
     }
 
-    public Gossip(int id, String title, String content, Date date, int user_id, String category, int total, int gossip_collected) {
-        this.gossip_id = id;
-        this.title = title;
-        this.content = content;
-        this.date = date;
-        this.user_id = user_id;
-        this.category = category;
-        this.total = total;
-        this.gossip_collected = gossip_collected;
+    public void setIscollect(int iscollect) {
+        this.iscollect = iscollect;
     }
 
     public int getGossip_id() {
-        return gossip_id;
+        return this.gossip_id;
     }
 
-    public void setGossip_id(int id){
-        this.gossip_id = id;
+    public void setGossip_id(int gossip_id) {
+        this.gossip_id = gossip_id;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
     public String getContent() {
-        return content;
+        return this.content;
     }
 
     public void setContent(String content) {
@@ -61,28 +47,74 @@ public class Gossip{
     }
 
     public Date getDate() {
-        return date;
+        return this.date;
     }
 
     public void setDate(Date date) {
         this.date = date;
     }
 
-    public String getCategory(){
-        return category;
+    public int getUser_id() {
+        return this.user_id;
     }
 
-    public void setCategory(String category){
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(String category) {
         this.category = category;
     }
 
-    public int getTotal(){
-        return total;
+    public String getAuthor() {
+        return this.author;
     }
 
-    public int getGossip_collected(){
-        return gossip_collected;
+    public void setAuthor(String author) {
+        this.author = author;
     }
+
+    public int getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public int getIslike() {
+        return this.islike;
+    }
+
+    public void setIslike(int islike) {
+        this.islike = islike;
+    }
+
+    
+    
+
+    public Gossip() {
+ 
+    }
+
+    public Gossip(int id, String title, String content, Date date, int user_id, String category, String author, int total, int islike, int iscollect) {
+        this.gossip_id = id;
+        this.title = title;
+        this.content = content;
+        this.date = date;
+        this.user_id = user_id;
+        this.category = category;
+        this.author = author;
+        this.total = total;
+        this.islike = islike;
+        this.iscollect = iscollect;
+    }
+
+    
     
     public static void add(Gossip discussion) {
     }
