@@ -4,7 +4,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -12,19 +11,26 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import AppMenu from "../component/AppMenu";
 import { AuthContext, STATUS } from "../account/AuthContext";
 
 export default function SignIn() {
+  let navigate = useNavigate();
   const authContext = useContext(AuthContext);
+  if(authContext.status===STATUS.toSignIn||authContext.status===STATUS.toSignUp){
+    console.log("尚未登入");
+  }else{
+    console.log("已登入");
+  }
   const [account, setAccount] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [message, setMessage] = useState("");
   //登入
   const handleSubmit = async function () {
     let auth = { account: account, password: password };
-    window.location.href="/record";
       try {
         // get user資料
         const res = await axios.get("/user", auth);
@@ -33,8 +39,7 @@ export default function SignIn() {
           console.log(res);
           console.log(res.statusText);
           setMessage(res.data);
-          window.location.href="/";
-          //不確定需不需要改狀態
+          navigate("/record");
           authContext.setStatus(STATUS.toSignOut);
         }
       } catch (error) {
@@ -62,7 +67,7 @@ export default function SignIn() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            height: "55vh",
+            height: "53vh",
           }}
         >
           {/* 頭像ICON */}
@@ -131,13 +136,9 @@ export default function SignIn() {
                 <Typography color="red">{message}</Typography>
               </Grid>
               <Grid item>
-                <Link
-                  href="./SignUp"
-                  variant="contained"
-                  onClick={changeStatus}
-                >
+              <Button component={Link} to="/SignUp" onClick={changeStatus}>
                   還沒有帳號是吧？ 註冊
-                </Link>
+                </Button>
               </Grid>
             </Grid>
           </Box>

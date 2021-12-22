@@ -12,7 +12,8 @@ import SignUp from './account/SignUp.js'
 import {AuthContext, STATUS} from './account/AuthContext';
 
 export default function AppRouter(){
-  const [status, setStatus] = useState(STATUS.toSignIn);
+  //預設為toSignIn
+  const [status, setStatus] = useState(STATUS.toSignOut);
   return (
     <AuthContext.Provider value={{status, setStatus}}>
     <Router>
