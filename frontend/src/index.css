@@ -5,9 +5,23 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #E0E1DD;
+  /* background: rgb(195, 205, 219); */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.textarea {
+  resize: none;
+}
+.fw-bold {
+font-weight: bold;
+}
+
+.list:hover {
+  background: rgba(139, 139, 139, 0.2);
+
 }

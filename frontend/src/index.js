@@ -1,23 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import "./index.css";
-// import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
-import RecordList from "./record/RecordList.js";
-import Main from "./ui/Main.js";
+import App from "./App.js";
+import './index.css';
+
 
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/record" element={<RecordList />} />
-      </Routes>
-    </Router>
-  </React.StrictMode>,
+  <App/>,
   document.getElementById("root")
 );
 

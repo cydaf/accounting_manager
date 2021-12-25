@@ -1,5 +1,5 @@
 import './App.css';
-import React from "react";
+import React, {useState} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RecordList from "./view/RecordList.js";
 import ForumIndex from "./view/ForumIndex.js"
@@ -9,39 +9,14 @@ import AddExpenditure from './component/AddExpenditure.js'
 import TabSwitch from './component/TabSwitch.js'
 import SignIn from './account/SignIn.js'
 import SignUp from './account/SignUp.js'
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AppRouter from './AppRouter';
+import {AuthContext, STATUS} from './account/AuthContext';
 
-// 主題色設定
-const theme = createTheme({
-
-  palette: {
-    primary: {
-      main: '#415A77', // #f44336(origin)
-    },
-    secondary: {
-      main: '#F5B7B1',
-    },
-    lightBlue: {
-      main: '#778DA9',
-    },
-    lightbg:{
-      main: '#E0E1DD'
-    },
-    lightGray: {
-      main: 'rgb(130, 130, 130)'
-    },
-    lightText: {
-      main: 'white'
-    }
-  },
-});
-function App() {
+export default function AppRouter(){
+  //預設為toSignIn
+  const [status, setStatus] = useState(STATUS.toSignOut);
   return (
-    <React.StrictMode>
-      <ThemeProvider theme={theme}>
-      <AppRouter/>
-    {/* <Router>
+    <AuthContext.Provider value={{status, setStatus}}>
+    <Router>
       <Routes>
         <Route path="/" element={<RecordList />} />
         <Route path="/record" element={<RecordList />} />
@@ -53,10 +28,7 @@ function App() {
         <Route path="/SignIn" element={<SignIn />} />
         <Route path="/SignUp" element={<SignUp />} />
       </Routes>
-    </Router> */}
-    </ThemeProvider>
-  </React.StrictMode>
+    </Router>
+    </AuthContext.Provider>
   );
 }
-
-export default App;
