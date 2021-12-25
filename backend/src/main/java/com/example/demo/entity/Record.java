@@ -9,17 +9,18 @@ public class Record{
     private String category;
     private String descs;
     private Date date;
-
+    private String revenue;
     public Record() {
  
     }
-    public Record(int id, String user_id, String descs, int price, String category, Date date) {
+    public Record(int id, String user_id, String descs, int price, String category, Date date, String revenue) {
       this.id = id;
       this.user_id = user_id;
       this.price = price;
       this.category = category;
       this.descs = descs;
       this.date = date;
+      this.revenue = revenue;
     }
     
     public int getId() {
@@ -65,11 +66,18 @@ public class Record{
       return date;
     }
 
-    public void setcategory(Date date) {
+    public void setDate(Date date) {
       this.date = date;
+    }
+
+    public String getRevenue() {
+      return revenue;
+    }
+
+    public void setRevenue(String revenue) {
+      this.revenue = revenue;
     }
 
     public static void add(Record product) {
     }
-
 }

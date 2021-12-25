@@ -19,14 +19,16 @@ public class RecordController {
   @Autowired
   RecordDAO dao;
 
-  @GetMapping(value = "/Record")
-  public List<Record> retrieveRecords() throws SQLException{
-      return dao.findAll();
+  @GetMapping(value = "/RecordSum/{id}/date/{date}")
+  public int retrieveRecordSum(@PathVariable("id") int id, @PathVariable("date") String date) throws SQLException {
+    return dao.setSum(id, date);
   }
-  @GetMapping(value = {"/Record/{id}"})
-  public Record retrieveOneRecord(@PathVariable("id") int id) throws SQLException{
-      return dao.findOne(id);
+
+  @GetMapping(value = "/Record/{id}/date/{date}")
+  public List<Record> retrieveRecords(@PathVariable("id") int id,@PathVariable("date") String date) throws SQLException{
+    return dao.findAll(id, date);
   }
+
   @PostMapping(value = "/Record")
   public void processFormCreate(@RequestBody Record Record) throws SQLException {
       dao.insert(Record);
