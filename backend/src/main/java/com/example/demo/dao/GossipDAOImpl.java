@@ -144,6 +144,7 @@ public List<Gossip> findAll(int user_id) {
   
   }
   
+  //更新文章內容
   public int update(Gossip discussion) {
     int result = 0;
     try {
@@ -165,12 +166,12 @@ public List<Gossip> findAll(int user_id) {
     return result;
   }
 
+  //更新收藏
   public int updateCollect(Gossip discussion) {
     int result = 0;
     try {
-      System.out.print(discussion);
       Connection conn = dataSource.getConnection();
-      String sql = "update collect set iscollect =? where gossip_id =? and user_id = ?";
+      String sql = "Insert into collect (gossip_id, user_id, iscollect) values (?, ?, ?) on duplicate key update iscollect = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, discussion.getIscollect());
       stmt.setInt(2, discussion.getGossip_id());
@@ -185,15 +186,17 @@ public List<Gossip> findAll(int user_id) {
     return result;
   }
 
+  //更新喜歡的文章
   public int updateLike(Gossip discussion) {
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
-      String sql = "update likelist set islike =? where gossip_id =? and user_id = ?";
+      String sql = "Insert into likelist (gossip_id, user_id, islike) values (?, ?, ?) on duplicate key update islike = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, discussion.getIslike());
       stmt.setInt(2, discussion.getGossip_id());
       stmt.setInt(3, discussion.getUser_id());
+      stmt.setInt(4, discussion.getIslike());
       System.out.print(stmt);
       result = stmt.executeUpdate();
       conn.close();
@@ -203,8 +206,9 @@ public List<Gossip> findAll(int user_id) {
     }
     return result;
   }
-  
-  public int delete(int gossip_id) {
+
+  //刪除文章
+  public int delete(int gossip_id) { 
     int result = 0;
     try {
       Connection conn = dataSource.getConnection();
