@@ -101,7 +101,7 @@ public class Gossip{
  
     }
 
-    public Gossip(int id, String title, String content, Date date, int user_id, String category, String author, int total, int islike, int iscollect) {
+    public Gossip(int id, String title, String content, Date date, int user_id, String category, String author, int total,int iscollect, int islike) {
         this.gossip_id = id;
         this.title = title;
         this.content = content;
@@ -110,8 +110,8 @@ public class Gossip{
         this.category = category;
         this.author = author;
         this.total = total;
-        this.islike = islike;
         this.iscollect = iscollect;
+        this.islike = islike;
     }
 
     
