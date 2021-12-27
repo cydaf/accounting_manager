@@ -32,7 +32,7 @@ export default function ForumCollect() {
 
   async function fetchData() {
       try {
-        const result = await axios.get("/Gossip/1");
+        const result = await axios.get("/Gossip/archieve/1");
         console.log(result.data)
         setArticle(result.data);
       } catch (e) {
@@ -61,12 +61,13 @@ export default function ForumCollect() {
     <Box>
       <AppMenu />
       <Container maxWidth="sm">
+      <img src="./../assets/banner-collect.png" alt="banner" style={{maxWidth: '100%'}}></img>
         {article.map((data, index) => {
           return <ForumCard key={index} title={data}></ForumCard>;
         })}
 
       </Container>
-      <h2>個人收藏還沒完成！施工中！</h2>
+      
       <Fab
         color="primary"
         aria-label="add"
@@ -80,8 +81,6 @@ export default function ForumCollect() {
         <AddIcon  />
       </Fab>
       <Fab
-        component={Link}
-        to="../Collect"
         color="secondary"
         aria-label="add"
         sx={{
@@ -97,7 +96,7 @@ export default function ForumCollect() {
       <Fab
         color="lightblue"
         component={Link}
-        to="../Personal"
+        to="./../Personal"
         aria-label="add"
         sx={{
           position: "fixed",

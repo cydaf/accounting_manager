@@ -32,7 +32,7 @@ export default function ForumPersonal() {
 
   async function fetchData() {
       try {
-        const result = await axios.get("/Gossip/1");
+        const result = await axios.get("/Gossip/personal/1");
         console.log(result.data)
         setArticle(result.data);
       } catch (e) {
@@ -61,12 +61,12 @@ export default function ForumPersonal() {
     <Box>
       <AppMenu />
       <Container maxWidth="sm">
+      <img src="./../assets/banner-per.png" alt="banner" style={{maxWidth: '100%'}}></img>
         {article.map((data, index) => {
-          return <ForumCard key={index} title={data}></ForumCard>;
+          return <ForumCard key={index} title={data} edit={true}></ForumCard>;
         })}
 
       </Container>
-      <h2>個人發的文章還沒完成！施工中！</h2>
       <Fab
         color="primary"
         aria-label="add"
@@ -81,7 +81,7 @@ export default function ForumPersonal() {
       </Fab>
       <Fab
         component={Link}
-        to="../Collect"
+        to="./../Collect"
         color="secondary"
         aria-label="add"
         sx={{
@@ -96,8 +96,6 @@ export default function ForumPersonal() {
       </Fab>
       <Fab
         color="lightblue"
-        component={Link}
-        to="../Personal"
         aria-label="add"
         sx={{
           position: "fixed",

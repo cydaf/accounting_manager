@@ -8,15 +8,22 @@ import {
   Avatar,
   Typography,
   Checkbox,
+  Box
 } from "@mui/material";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+
+import { flexbox } from "@mui/system";
 
 export default function ForumCard(props) {
   const [article, setArticle] = useState({...props.title});
   let {title,date,content,author,category,islike,iscollect,gossip_id,total} = article;
+  let canEdit = props.edit;
   category = category.split(',');
 
   async function handleLike() {
@@ -51,10 +58,26 @@ export default function ForumCard(props) {
     }  
   }
 
+  // async function handleDelete() {
+  //   try {
+  //     const result = await axios.put("/Gossip/collect",{
+  //       gossip_id,
+  //       user_id:1, // 先把使用者寫死
+  //       iscollect:iscollect===0?1:0,
+  //     });
+  //     let data = {...article}
+  //     data.iscollect=iscollect===0?1:0
+  //     setArticle(data)
+  //   } catch (e) {
+  //     alert("put failed!");
+  //   }  
+  // }
+
   return (
     <Card sx={{ minWidth: 275,marginBottom:1 }}>
       <CardContent>
-        <Typography color="text.secondary" gutterBottom>
+        
+        <Typography color="text.secondary" sx={{display: 'flex', justifyContent: 'space-between' }} gutterBottom>
           <Chip
             avatar={
               <Avatar
@@ -66,6 +89,18 @@ export default function ForumCard(props) {
             variant="Chip Filled"
             size="medium"
           />
+          {
+          canEdit?
+          <Box>
+          <IconButton aria-label="Example">
+                <DeleteIcon />
+          </IconButton>
+          <IconButton aria-label="Example">
+          <EditIcon />
+          </IconButton>
+          </Box>
+          :null
+          }
         </Typography>
         <Typography variant="h5" component="div">
           {title}
