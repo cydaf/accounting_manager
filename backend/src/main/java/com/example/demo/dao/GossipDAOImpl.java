@@ -173,9 +173,10 @@ public List<Gossip> findAll(int user_id) {
       Connection conn = dataSource.getConnection();
       String sql = "Insert into collect (gossip_id, user_id, iscollect) values (?, ?, ?) on duplicate key update iscollect = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, discussion.getIscollect());
-      stmt.setInt(2, discussion.getGossip_id());
-      stmt.setInt(3, discussion.getUser_id());
+      stmt.setInt(1, discussion.getGossip_id());
+      stmt.setInt(2, discussion.getUser_id());
+      stmt.setInt(3, discussion.getIscollect());
+      stmt.setInt(4, discussion.getIscollect());
       System.out.print(stmt);
       result = stmt.executeUpdate();
       conn.close();
@@ -193,9 +194,9 @@ public List<Gossip> findAll(int user_id) {
       Connection conn = dataSource.getConnection();
       String sql = "Insert into likelist (gossip_id, user_id, islike) values (?, ?, ?) on duplicate key update islike = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setInt(1, discussion.getIslike());
-      stmt.setInt(2, discussion.getGossip_id());
-      stmt.setInt(3, discussion.getUser_id());
+      stmt.setInt(1, discussion.getGossip_id());
+      stmt.setInt(2, discussion.getUser_id());
+      stmt.setInt(3, discussion.getIslike());
       stmt.setInt(4, discussion.getIslike());
       System.out.print(stmt);
       result = stmt.executeUpdate();
