@@ -9,6 +9,10 @@ body {
   /* background: rgb(195, 205, 219); */
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -21,7 +25,6 @@ code {
 font-weight: bold;
 }
 
-.list:hover {
-  background: rgba(139, 139, 139, 0.2);
-
+.icon:hover{
+  color: rgba(146, 146, 146, 0.75);
 }

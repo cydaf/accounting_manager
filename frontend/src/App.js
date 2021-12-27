@@ -29,7 +29,7 @@ const theme = createTheme({
       main: '#E0E1DD'
     },
     lightGray: {
-      main: 'rgb(130, 130, 130)'
+      main: 'rgb(146, 146, 146)'
     },
     lightText: {
       main: 'white'
