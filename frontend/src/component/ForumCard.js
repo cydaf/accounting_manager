@@ -1,5 +1,5 @@
-import * as React from "react";
-
+import React, {useState } from "react";
+import axios from "axios";
 import {
     Card,
   CardActions,
@@ -15,9 +15,44 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 export default function ForumCard(props) {
-  const{title,date,content} = props.title;
+  const [article, setArticle] = useState({...props.title});
+  let {title,date,content,author,category,islike,iscollect,gossip_id,total} = article;
+  category = category.split(',');
+
+  async function handleLike() {
+    try {
+      const result = await axios.put("/Gossip/like",{
+        gossip_id,
+        user_id:1,  // 先把使用者寫死
+        islike:islike===0?1:0,
+      });
+      let data = {...article}
+      data.islike=islike===0?1:0
+      data.total=islike===0?data.total+1:data.total-1
+      setArticle(data)
+    } catch (e) {
+      alert("put failed!");
+    }
+    
+  }
+
+  async function handleCollect() {
+    try {
+      const result = await axios.put("/Gossip/collect",{
+        gossip_id,
+        user_id:1, // 先把使用者寫死
+        iscollect:iscollect===0?1:0,
+      });
+      let data = {...article}
+      data.iscollect=iscollect===0?1:0
+      setArticle(data)
+    } catch (e) {
+      alert("put failed!");
+    }  
+  }
+
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card sx={{ minWidth: 275,marginBottom:1 }}>
       <CardContent>
         <Typography color="text.secondary" gutterBottom>
           <Chip
@@ -27,7 +62,7 @@ export default function ForumCard(props) {
                 src="https://images.unsplash.com/photo-1596805827513-33a7b2523abf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&q=80"
               />
             }
-            label="理財小達人"
+            label={author}
             variant="Chip Filled"
             size="medium"
           />
@@ -41,17 +76,17 @@ export default function ForumCard(props) {
         <Typography variant="body2">
           {content}
         </Typography>
-      </CardContent>
-      <Typography>
-        <Chip label="存錢" variant="outlined" sx={{ mb: 1.5, ml: 1 }} />
-        <Chip label="理財" variant="outlined" sx={{ mb: 1.5, ml: 1 }} />
+        <Typography>
+      {category.map((data, index) => {
+          return <Chip label={data} variant="outlined" sx={{ mb: 0.5,mt:3,mr:0.5}} key={index}/>;
+        })}
+        
       </Typography>
-      <CardActions>
-        <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
-        <Checkbox
-          icon={<BookmarkBorderIcon />}
-          checkedIcon={<BookmarkIcon />}
-        />
+      </CardContent>
+      <CardActions sx={{ bgcolor: 'lightBlue.main',color:'white'}}>       
+        <Checkbox color="secondary" icon={<FavoriteBorder />} checkedIcon={<Favorite />} onClick={handleLike} checked={Boolean(islike)}/>
+        {total}人說讚
+        <Checkbox icon={<BookmarkBorderIcon />} checkedIcon={<BookmarkIcon /> } onClick={handleCollect} checked={Boolean(iscollect)}/>
       </CardActions>
     </Card>
   );

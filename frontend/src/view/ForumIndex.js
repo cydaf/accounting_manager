@@ -32,28 +32,35 @@ export default function ForumIndex() {
 
   async function fetchData() {
       try {
-        const result = await axios.get("/Gossip/1");
-        console.log(result.data)
+        const result = await axios.get("/Gossip/1");// 先把使用者寫死
         setArticle(result.data);
       } catch (e) {
         alert("get failed，使用前端預設值");
         setArticle([
           {
-            id: 1,
+            gossip_id: 1,
             title: "ETF 投資心法",
-            user_name: "Andy",
-            user_id: 1,
-            content: "0050,0056是個好投資",
+            content: "台積電今年10月拍板赴日設立12吋晶圓廠，近期密集核算在日本的建廠成本，發現在日方全力協助下，建廠成本已幾乎和台灣相近，讓台積電對赴日本興建晶圓廠，一改先前認定成本高等不利的態度，台積電內部可能調整在日本設廠戰略布局，不排除也另在日本設立先進製程晶圓廠。",
             date: "2021-12-07",
-          },
-          {
-            id: 2,
-            title: "台積電股票",
-            user_name: "Tim",
             user_id: 1,
+            category: "理財",
+            author: "Andy",
+            total: 1,
+            islike: 0,
+            iscollect: 1
+            },
+            {
+            gossip_id: 2,
+            title: "台積電股票",
             content: "台積電近日股市連續上漲",
             date: "2021-12-06",
-          },
+            user_id: 2,
+            category: "理財",
+            author: "Mavis",
+            total: 1,
+            islike: 1,
+            iscollect: 0
+            },
         ]);
       }
     }
@@ -61,6 +68,7 @@ export default function ForumIndex() {
     <Box>
       <AppMenu />
       <Container maxWidth="sm">
+        <img src="./assets/banner.png" alt="banner" style={{maxWidth: '100%'}}></img>
         {article.map((data, index) => {
           return <ForumCard key={index} title={data}></ForumCard>;
         })}
@@ -86,9 +94,7 @@ export default function ForumIndex() {
         aria-label="add"
         sx={{
           position: "fixed",
-
           bottom: (theme) => theme.spacing(2),
-
           left: (theme) => theme.spacing(2),
         }}
       >
