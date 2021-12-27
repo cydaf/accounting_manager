@@ -84,7 +84,6 @@ export default function SignIn() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -127,7 +126,7 @@ export default function SignIn() {
               color="primary"
               sx={{ mt: 3, mb: 2 }}
               endIcon={<SendIcon />}
-              // onClick={handleSubmit}
+              onClick={handleSubmit}
             >
               LOGIN
             </Button>
