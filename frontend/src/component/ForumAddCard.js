@@ -21,7 +21,6 @@ export default function ForumAddCard(props) {
   const handleClose = props.onClose;
   const date = new Date();
   const [article, setArticle] = useState({
-    id: 3,
     date:date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
     title: "",
     content: "",
