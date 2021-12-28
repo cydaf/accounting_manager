@@ -28,9 +28,6 @@ public class AccountDAOImpl implements AccountDAO {
           if(!result_check.next())
           {
             String sql = "insert into user (name, account, password, enabled) values(?, ?, ?, 1)";
-            System.out.println(account.getAccount());
-            System.out.println(account.getUsername());
-
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, account.getUsername());
             stmt.setString(2, account.getAccount());
