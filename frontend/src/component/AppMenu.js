@@ -4,6 +4,8 @@ import { AuthContext, STATUS } from "../account/AuthContext";
 
 import { Link } from "react-router-dom";
 
+import axios from 'axios';
+
 import {
   AppBar,
   Button,
@@ -15,11 +17,23 @@ import {
 } from "@mui/material";
 
 export default function AppMenu() {
+  const [username, setUsername] = useState("username");
+  const [account, setAccount] = useState("使用者帳號");
   const authContext = useContext(AuthContext);
   //登出
   const changeStatus = function () {
     authContext.setStatus(STATUS.toSignIn);
   };
+  useEffect(() => {
+    async function fetchData () {
+      const user = await axios.get('/user'+1);
+      console.log(user.data);
+      setUsername(user.username);
+      setAccount(user.account);
+    }
+    fetchData();
+
+  },[]);
   return (
     <AppBar position="sticky">
       <Toolbar>
@@ -43,7 +57,7 @@ export default function AppMenu() {
         狀態在toSignOut顯示Username */}
         {authContext.status === STATUS.toSignOut ? (
           <>
-            <Typography color="inherit">Username</Typography>
+            <Typography color="inherit">{username}</Typography>
             <Button
               component={Link}
               to="../SignIn"
@@ -59,7 +73,7 @@ export default function AppMenu() {
           </Button>
         )}
         {authContext.status === STATUS.toSignOut ? (
-          <Tooltip title="使用者帳號顯示">
+          <Tooltip title={account}>
             <Avatar
               sx={{ m: 1, bgcolor: "secondary.main" }}
               variant="rounded"
