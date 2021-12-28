@@ -55,7 +55,7 @@ export default function TabSwitch(props) {
     const [record, setRecord] = useState({
         date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
         price: 0,
-        category: optionsEx[0].label,
+        category: "",
         descs: "",
         revenue: "",
         user_id: "1"
@@ -70,12 +70,12 @@ export default function TabSwitch(props) {
             console.log(record.user_id);
             await axios.post("/Record", record);
             alert("成功記一筆收入");
+            handleClose(true);
         }
         catch (e) {
             console.log(e);
             alert("紀錄失敗");
         }
-        handleClose();
     }
 
     const updateEx = async function () {
@@ -116,10 +116,8 @@ export default function TabSwitch(props) {
 
 
     return (
-        //<Box>
-        <Dialog open={handleOpen}>
-            {/* <AppMenu /> */}
-
+        <Box>
+        {/* <Dialog open={handleOpen}> */}
             <Box sx={{ width: '100%' }} >
                 <TabContext value={tabValue}>
                     <Box sx={{ background: 'rgb(195, 205, 219)' }}>
@@ -296,7 +294,7 @@ export default function TabSwitch(props) {
                                                 <Autocomplete
                                                     name="category"
                                                     size="small"
-                                                    value={record.category}
+                                                    // value={record.category}
                                                     onChange={handleCate}
                                                     // value={inValue}
                                                     // onChange={(event, newInputValue) => {
@@ -362,8 +360,8 @@ export default function TabSwitch(props) {
                     </TabPanel>
                 </TabContext>
             </Box>
-        </Dialog>
-        //</Box>
+        {/* // </Dialog> */}
+        </Box>
     );
 }
 

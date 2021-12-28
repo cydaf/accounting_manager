@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Box, List, ListItem, ListItemText, Fab, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, List, ListItem, ListItemText, Fab, IconButton, Dialog } from '@mui/material';
 
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
@@ -15,7 +15,7 @@ import Grid from '@mui/material/Grid';
 export default function RecordList() {
   const [date, setDate] = useState(new Date());
   const [records, setRecords] = useState([]);
-  const [sum, setSum] = useState();
+  const [sum, setSum] = useState(0);
   const [deleted, setDeleted] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -23,9 +23,9 @@ export default function RecordList() {
     setOpen(true);
   };
 
-  const handleClose = (refresh=false) => {
+  const handleClose = (refresh = false) => {
     setOpen(false);
-    if(refresh){
+    if (refresh) {
       fetchData()
     }
   };
@@ -42,10 +42,11 @@ export default function RecordList() {
 
   async function fetchData() {
     const result = await axios.get("/Record/" + 1 + "/date/" + onChangeDate);
-    // const sumResult = await axios.get("/RecordSum");
+    const sumResult = await axios.get("/RecordSum/" + 1 + "/date/" + onChangeDate);
     console.log(result.data);
     setRecords(result.data);
-    // console.log(sumResult.data);
+    console.log(sumResult.data);
+    setSum(sumResult.data);
   }
 
   // 刪除
@@ -64,54 +65,102 @@ export default function RecordList() {
     setOpen(true);
   }
 
-  const text = {
-    color: "#0D1B2A",
+  const titleEx = {
+    color: "rgb(192, 35, 74)",
     fontWeight: "bold"
   };
+  const titleIn = {
+    color: "rgb(48, 48, 48)",
+    fontWeight: "bold"
+  }
 
   return (
 
     <Box>
       <AppMenu />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
+        <Grid container spacing={3} >
+          <Grid item xs={12} >
             <CalendarPicker date={date} onChange={handleChange} />
           </Grid>
         </Grid>
       </LocalizationProvider>
-      <List subheader={onChangeDate} aria-label="expenses"
-        sx={{ width: '95%', margin: 'auto' }}
-      >
+      <Box sx={{ maxWidth: '55%', margin: 'auto' }}>
+        {sum >= 0 ?
+          (
+            <Typography sx={{ textAlign: 'right', py: 1.5, px: 3, bgcolor: '#778DA9', borderRadius: '10px 10px 0 0', color: 'rgb(241, 241, 241)' }}>
+              {`合計：$ ${sum}`}
+            </Typography>)
+          :
+          <Typography sx={{ textAlign: 'right', py: 1.5, px: 3, bgcolor: 'rgb(209, 72, 106)', borderRadius: '10px 10px 0 0', color: 'rgb(241, 241, 241)' }}>
+            {`合計：$ ${sum}`}
+          </Typography>
+        }
 
-        {records.map((record, index) =>
-          <ListItem divider key={index} sx={{ px: 8, py: 3 }} className="list">
-            <ListItemText primaryTypographyProps={{ style: text }} primary={record.descs} className="fw-bold"
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    sx={{ display: 'inline', fontWeight: 600 }}
-                    component="span"
-                    variant="body2"
-                    color="rgb(77, 77, 77)"
+        <List aria-label="expenses"
+          sx={{ borderRadius: '0 0 10px 10px', bgcolor: 'rgba(241, 241, 241, 0.9)', mb: 2 }}
+        >
+        {records.length > 0 ? (
+          records.map((record, index) =>
+            (record.revenue == "expense"
+              ? (
+                <ListItem divider key={index} sx={{ px: 8, py: 2.5 }} className="list">
+                  <ListItemText primaryTypographyProps={{ style: titleEx }} primary={record.descs} className="fw-bold"
+                    secondary={
+                      <React.Fragment>
+                        <Typography
+                          sx={{ display: 'inline', fontWeight: 600 }}
+                          component="span"
+                          variant="body2"
+                          color="rgb(206, 102, 128)"
+                        >
+                          花費：{record.price} / 分類：{record.category} / 日期：{record.date}
+                        </Typography>
+                      </React.Fragment>
+                    }></ListItemText>
+                  <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray" className="icon"
+                    onClick={() => updateData(record)}
                   >
-                    價錢：{record.price} / 分類：{record.category} / 日期：{record.date}
-                  </Typography>
-                </React.Fragment>
-              }></ListItemText>
-            <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray"
-              onClick={() => updateData(record)}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton edge="end" aria-label="delete" color="lightGray"
-              onClick={() => deleteData(record.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItem>
-        )}
-
-      </List>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton edge="end" aria-label="delete" color="lightGray" className="icon"
+                    onClick={() => deleteData(record.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItem>
+              )
+              :
+              <ListItem divider key={index} sx={{ px: 8, py: 2.5 }} className="list">
+                <ListItemText primaryTypographyProps={{ style: titleIn }} primary={record.descs} className="fw-bold"
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        sx={{ display: 'inline', fontWeight: 600 }}
+                        component="span"
+                        variant="body2"
+                        color="rgb(88, 88, 88)"
+                      >
+                        進帳：{record.price} / 分類：{record.category} / 日期：{record.date}
+                      </Typography>
+                    </React.Fragment>
+                  }></ListItemText>
+                <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray" className="icon"
+                  onClick={() => updateData(record)}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton edge="end" aria-label="delete" color="lightGray" className="icon"
+                  onClick={() => deleteData(record.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
+            )
+          )
+        )
+          : <Typography sx={{ textAlign: 'center', py: 1.5, color: '#415A77', fontWeight: 600 }}>目前沒有記錄，快去記一筆吧 ~</Typography>
+}
+        </List>
+      </Box>
       <Fab color="primary" aria-label="add"
         // component={Link}
         // to="../TabSwitch"
@@ -123,9 +172,14 @@ export default function RecordList() {
         }}>
         <AddIcon />
       </Fab>
-      <TabSwitch open={open} onClose={handleClose}
-        record={records}
-      />
+      <Dialog
+        open={open}
+        onClose={handleClose}
+      >
+        <TabSwitch open={open} onClose={handleClose}
+          record={records}
+        />
+      </Dialog>
     </Box>
 
 
