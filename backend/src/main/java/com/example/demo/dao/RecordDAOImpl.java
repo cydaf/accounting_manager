@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.Record;
 
 @Repository
-public class RecordDAOInpl implements RecordDAO {
+public class RecordDAOImpl implements RecordDAO {
 
   @Autowired
   private DataSource dataSource;
