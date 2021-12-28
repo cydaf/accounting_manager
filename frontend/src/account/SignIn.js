@@ -39,8 +39,10 @@ export default function SignIn() {
           console.log(res);
           console.log(res.statusText);
           setMessage(res.data);
-          navigate("/record");
+          navigate('/record');
           authContext.setStatus(STATUS.toSignOut);
+        }else{
+          console.log("something wrong")
         }
       } catch (error) {
         console.log(error);
@@ -120,13 +122,14 @@ export default function SignIn() {
               label="Remember me"
             /> */}
             <Button
-              type="submit"
+              onClick={handleSubmit}
+              // type="submit"
               fullWidth
               variant="contained"
               color="primary"
               sx={{ mt: 3, mb: 2 }}
               endIcon={<SendIcon />}
-              onClick={handleSubmit}
+              // onClick={handleSubmit}
             >
               LOGIN
             </Button>
