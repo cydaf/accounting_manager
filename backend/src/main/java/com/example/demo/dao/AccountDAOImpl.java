@@ -23,17 +23,17 @@ public class AccountDAOImpl implements AccountDAO {
           Connection conn = dataSource.getConnection();
           String sql_check = "select email from user where email = ? ";
           PreparedStatement stmt_check = conn.prepareStatement(sql_check);
-          stmt_check.setString(1,account.getEmail());
+          stmt_check.setString(1,account.getAccount());
           ResultSet result_check = stmt_check.executeQuery();
           if(!result_check.next())
           {
             String sql = "insert into user (name, email, password, enabled) values(?, ?, ?, 1)";
-            System.out.println(account.getEmail());
+            System.out.println(account.getAccount());
             System.out.println(account.getUsername());
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, account.getUsername());
-            stmt.setString(2, account.getEmail());
+            stmt.setString(2, account.getAccount());
             String encoded = "{bcrypt}"+new BCryptPasswordEncoder().encode(account.getPassword());
             stmt.setString(3, encoded);
             result = stmt.executeUpdate();

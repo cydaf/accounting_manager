@@ -1,12 +1,12 @@
 package com.example.demo.entity;
 
 public class Account {
-    private String email;
+    private String account;
     private String username;
     private String password;
 
-    public Account(String email, String username, String password) {
-        this.email = email;
+    public Account(String account, String username, String password) {
+        this.account = account;
         this.username = username;
         this.password = password;
     }
@@ -27,12 +27,12 @@ public class Account {
         this.password = password;
     }
 
-    public String getEmail() {
-        return this.email;
+    public String getAccount() {
+        return this.account;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
 }
