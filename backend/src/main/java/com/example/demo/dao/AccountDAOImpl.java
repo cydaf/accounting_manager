@@ -21,13 +21,13 @@ public class AccountDAOImpl implements AccountDAO {
         int result = 0;
         try {
           Connection conn = dataSource.getConnection();
-          String sql_check = "select email from user where email = ? ";
+          String sql_check = "select account from user where account = ? ";
           PreparedStatement stmt_check = conn.prepareStatement(sql_check);
           stmt_check.setString(1,account.getAccount());
           ResultSet result_check = stmt_check.executeQuery();
           if(!result_check.next())
           {
-            String sql = "insert into user (name, email, password, enabled) values(?, ?, ?, 1)";
+            String sql = "insert into user (name, account, password, enabled) values(?, ?, ?, 1)";
             System.out.println(account.getAccount());
             System.out.println(account.getUsername());
 
