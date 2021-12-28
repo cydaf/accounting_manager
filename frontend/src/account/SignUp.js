@@ -38,10 +38,10 @@ export default function SignUp(props) {
 
   //按下註冊按鈕
   const Submit = async function () {
-    const user = { name: name, account: account, password: password };
+    const user = { username: name, account: account, password: password };
     console.log(user);
     // navigate('/SignIn');
-    if(name.length>0 && account.length>0 && password.length>6){
+    if(name.length>0 && account.length>0 && password.length>=6){
       try{
         const Auth = await axios.post("/user",user);
         if(Auth){
