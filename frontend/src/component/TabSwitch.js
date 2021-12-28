@@ -31,8 +31,7 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 
 export default function TabSwitch(props) {
-    // console.log(props.record);
-    // useEffect(() => setRecord(props.record), [props.record]);
+
 
 
     const handleOpen = props.open;
@@ -66,16 +65,21 @@ export default function TabSwitch(props) {
         // const record = { date: dateValue, price: priceValue, category: inputValue, descs: descsValue, revenue: 'income', user_id: "1" };
         // console.log(record);
         try {
-            record.revenue = "income";
-            console.log(record.user_id);
-            await axios.post("/Record", record);
-            alert("成功記一筆收入");
-            handleClose(true);
+            if (record.id) {
+                await axios.put("/Record", record);
+                alert("修改收入");
+            }
+            else {
+                record.revenue = "income";
+                await axios.post("/Record", record);
+                alert("成功記一筆收入");
+            }
         }
         catch (e) {
             console.log(e);
             alert("紀錄失敗");
         }
+        handleClose();
     }
 
     const updateEx = async function () {
@@ -101,23 +105,37 @@ export default function TabSwitch(props) {
 
     const handleClick = function (e) {
         setRecord({ ...record, [e.target.name]: e.target.value });
-      };
-      const handleCate = function (e, value) {
+    };
+    const handleCate = function (e, value) {
         console.log(value.label);
         setRecord({ ...record, category: value.label.toString() });
-        console.log('record:',record)
-      };
+        console.log('record:', record)
+    };
 
-      const handleDate = function (value) {
+    const handleDate = function (value) {
         console.log(value);
         const newDate = value.getFullYear() + "-" + (value.getMonth() + 1) + "-" + value.getDate();
-        setRecord({ ...record, date: newDate});
-      };
+        setRecord({ ...record, date: newDate });
+    };
+
+
+    useEffect(() => {
+        setRecord(props.record);
+        if(props.record.revenue == "expense"){
+            props.record.revenue = '1';
+        }else if(props.record.revenue == "income"){
+            props.record.revenue = '2';
+        }else if(props.record.revenue == ""){
+            props.record.revenue = '1';
+        }
+        setTabValue(props.record.revenue);
+    }, [props.record, props.record.revenue]);
+   
 
 
     return (
         <Box>
-        {/* <Dialog open={handleOpen}> */}
+            {/* <Dialog open={handleOpen}> */}
             <Box sx={{ width: '100%' }} >
                 <TabContext value={tabValue}>
                     <Box sx={{ background: 'rgb(195, 205, 219)' }}>
@@ -169,8 +187,8 @@ export default function TabSwitch(props) {
                                                         //     setPriceValue(e.target.value)
                                                         // }
                                                         // }
-                                                    value={record.price}
-                                                    onChange={handleClick}
+                                                        value={record.price}
+                                                        onChange={handleClick}
                                                     />
                                                 </Box>
                                                 <Autocomplete
@@ -202,7 +220,7 @@ export default function TabSwitch(props) {
                                                     )}
                                                     renderInput={(params) => <TextField {...params} label="類別" inputProps={{
                                                         ...params.inputProps,
-                                                        
+
                                                     }} />}
                                                 />
                                             </Box>
@@ -218,16 +236,16 @@ export default function TabSwitch(props) {
                                                 // onChange={(e) => {
                                                 //     setDescsValue(e.target.value)
                                                 // }}
-                                            onChange={handleClick}
-                                            value={record.descs}
+                                                onChange={handleClick}
+                                                value={record.descs}
                                             />
                                         </Stack>
                                         {/* <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} component={Link} to="../">取消</Button> */}
                                         <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} onClick={handleClose}>取消</Button>
-                                            <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} onClick={updateEx}>
-                                                {props.record.id?"修改":"新增"}
-                                                {/* 儲存 */}
-                                            </Button>
+                                        <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} onClick={updateEx}>
+                                            {record.id ? "修改" : "新增"}
+                                            {/* 儲存 */}
+                                        </Button>
                                     </CardContent>
                                     <div>
                                         {/* <div>{`消費日期： ${dateValue !== null ? `'${dateValue.getFullYear()}/${dateValue.getMonth() + 1}/${dateValue.getDate()}'` : 'null'}`}</div>
@@ -335,13 +353,13 @@ export default function TabSwitch(props) {
                                                 // }
                                                 // }
                                                 name="descs"
-                                            onChange={handleClick}
-                                            value={record.descs}
+                                                onChange={handleClick}
+                                                value={record.descs}
                                             />
                                         </Stack>
                                         {/* <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} component={Link} to="../">取消</Button> */}
                                         <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} onClick={handleClose}>取消</Button>
-                                        <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} onClick={updateIn}>儲存</Button>
+                                        <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} onClick={updateIn}>{record.id ? "修改" : "新增"}</Button>
                                     </CardContent>
                                     <div>
                                         {/* <div>{`消費日期： ${dateValue !== null ? `'${dateValue.getFullYear()}/${dateValue.getMonth() + 1}/${dateValue.getDate()}'` : 'null'}`}</div>
@@ -360,7 +378,7 @@ export default function TabSwitch(props) {
                     </TabPanel>
                 </TabContext>
             </Box>
-        {/* // </Dialog> */}
+            {/* // </Dialog> */}
         </Box>
     );
 }
