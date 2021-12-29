@@ -9,7 +9,6 @@ import com.example.demo.dao.AccountDAO;
 import com.example.demo.entity.Account;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 public class AccountController {
@@ -24,7 +23,6 @@ public class AccountController {
     }
 
     //login
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping(value = {"/user"})
     public String login() {
         return "登入成功";
