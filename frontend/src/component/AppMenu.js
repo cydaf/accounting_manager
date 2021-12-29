@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 
-import { AuthContext, STATUS } from "../account/AuthContext";
+//context傳值
+import { AuthContext, STATUS, ID } from "../account/AuthContext";
 
 import { Link } from "react-router-dom";
 
@@ -17,7 +18,7 @@ import {
 } from "@mui/material";
 
 export default function AppMenu() {
-  const [username, setUsername] = useState("username");
+  const [username, setUsername] = useState(ID.userID);
   const [account, setAccount] = useState("使用者帳號");
   const authContext = useContext(AuthContext);
   //登出
@@ -26,7 +27,9 @@ export default function AppMenu() {
   };
   useEffect(() => {
     async function fetchData () {
-      const user = await axios.get('/user'+1);
+      const user = await axios.get('/user/1');
+      //userID
+      console.log(ID.userID)
       console.log(user.data);
       setUsername(user.username);
       setAccount(user.account);
