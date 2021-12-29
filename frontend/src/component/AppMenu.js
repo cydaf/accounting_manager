@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 
 export default function AppMenu() {
-  const [username, setUsername] = useState(ID.userID);
+  const [username, setUsername] = useState("username");
   const [account, setAccount] = useState("使用者帳號");
   const authContext = useContext(AuthContext);
   //登出
@@ -27,7 +27,7 @@ export default function AppMenu() {
   };
   useEffect(() => {
     async function fetchData () {
-      const user = await axios.get('/user/1');
+      const user = await axios.get('/user/13');
       //userID
       console.log(ID.userID)
       console.log(user.data);
