@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,42 +9,58 @@ import {
   Container,
   TextareaAutosize,
   Button,
+  TextField,
+  Stack
 } from "@mui/material";
 
 import axios from "axios";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 
 export default function ForumAddCard(props) {
-  const handleClose = props.onClose;
-  const date = new Date();
-  const [article, setArticle] = useState({
-    date:date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
-    title: "",
-    content: "",
-    category:"理財",
-    user_id: "1", // 先把使用者寫死
-  });
+  const handleClose = props.onClose; // 關閉視窗方法
+  const tempData = props.tempData?props.tempData:{}; // 關閉視窗方法
+  const [article, setArticle] = useState(tempData);
 
+  console.log(article)
+  let  category = [
+    { title: "理財" },
+    { title: "股票" },
+    { title: "基金" },
+    { title: "存錢" },
+    { title: "省錢" },
+    { title: "小資族" },
+    { title: "虛擬貨幣" },
+  ];
+
+  // 新增/修改文章
   const update = async function () {
-    try {
-      if (article.title) {
-        await axios.post("/Gossip", article);
-        handleClose(true)
+      try {
+        if (!article.gossip_id) { // 新增
+          const date = new Date();
+          article.date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+          article.user_id = 1;
+          await axios.post("/Gossip", article);
+        }else{ // 修改
+          const date = new Date();
+          article.date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+          await axios.put("/Gossip", article);
+        }
+      } catch (e) {
+        alert("post failed");
       }
-    } catch (e) {
-      alert("post failed");
-    }
+    handleClose(true)
   };
 
+  // 加入 article 的值
   const handleClick = function (e) {
     setArticle({ ...article, [e.target.name]: e.target.value });
   };
+
+  // 加入 article 的分類
   const handleCate = function (e, value) {
     const cate = value.map((item) => {
-      return Object.values(item)[0];
+      return item;
     });
     setArticle({ ...article, category: cate.toString() });
   };
@@ -53,6 +69,7 @@ export default function ForumAddCard(props) {
       <Container maxWidth="sm" sx={{ mt: 5 }}>
         <Card sx={{ minWidth: 275 }}>
           <CardContent>
+
             <Stack spacing={3} sx={{ width: 500 }}>
               <Chip
                 avatar={
@@ -79,10 +96,14 @@ export default function ForumAddCard(props) {
                 multiple
                 id="tags-outlined"
                 onChange={handleCate}
-                options={category}
-                getOptionLabel={(option) => option.title}
-                defaultValue={[category[0]]}
-                filterSelectedOptions
+                options={category.map((option) => option.title)}
+                value={article.category?article.category.split(','):[]}
+                freeSolo
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                  ))
+                }
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -95,9 +116,8 @@ export default function ForumAddCard(props) {
                 onChange={handleClick}
                 name="content"
                 value={article.content}
-                minRows={20}
+                minRows={10}
                 aria-label="maximum height"
-                placeholder="Maximum 4 rows"
               />
             </Stack>
             <Button
@@ -123,9 +143,4 @@ export default function ForumAddCard(props) {
   );
 }
 
-const category = [
-  { title: "理財" },
-  { title: "股票" },
-  { title: "基金" },
-  { title: "存錢" },
-];
+
