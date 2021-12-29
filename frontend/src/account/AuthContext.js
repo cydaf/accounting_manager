@@ -29,8 +29,8 @@ status為toSignUp 未註冊，將要註冊
 let userID=0;
 async function fetchData() {
   try {
-     userID = await axios.get("/user/id");
-    // userID = 1;
+    //  userID = await axios.get("/user/id");
+    userID = 1;
    
   } catch (e) {
     console.log("確定有使用者嗎");
