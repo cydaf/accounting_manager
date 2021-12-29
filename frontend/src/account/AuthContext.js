@@ -31,6 +31,7 @@ async function fetchData() {
   try {
     //  userID = await axios.get("/user/id");
     userID = 1;
+    console.log(userID);
    
   } catch (e) {
     console.log("確定有使用者嗎");
