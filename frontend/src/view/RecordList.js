@@ -15,11 +15,20 @@ import Grid from '@mui/material/Grid';
 export default function RecordList() {
   const [date, setDate] = useState(new Date());
   const [records, setRecords] = useState([]);
+  const [currentRecord, setCurrentRecord] = useState([]);
   const [sum, setSum] = useState(0);
   const [deleted, setDeleted] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+    setCurrentRecord({
+      date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
+      price: 0,
+      category: "",
+      descs: "",
+      revenue: "",
+      user_id: "1"
+    });
     setOpen(true);
   };
 
@@ -60,8 +69,8 @@ export default function RecordList() {
   }
 
   // 修改
-  const updateData = function (temp) {
-    setRecords(temp);
+  const updateData = function (record) {
+    setCurrentRecord(record);
     setOpen(true);
   }
 
@@ -100,21 +109,47 @@ export default function RecordList() {
         <List aria-label="expenses"
           sx={{ borderRadius: '0 0 10px 10px', bgcolor: 'rgba(241, 241, 241, 0.9)', mb: 2 }}
         >
-        {records.length > 0 ? (
-          records.map((record, index) =>
-            (record.revenue == "expense"
-              ? (
+          {records.length > 0 ? (
+            records.map((record, index) =>
+              (record.revenue == "expense"
+                ? (
+                  <ListItem divider key={index} sx={{ px: 8, py: 2.5 }} className="list">
+                    <ListItemText primaryTypographyProps={{ style: titleEx }} primary={record.descs} className="fw-bold"
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{ display: 'inline', fontWeight: 600 }}
+                            component="span"
+                            variant="body2"
+                            color="rgb(206, 102, 128)"
+                          >
+                            花費：{record.price} / 分類：{record.category} / 日期：{record.date}
+                          </Typography>
+                        </React.Fragment>
+                      }></ListItemText>
+                    <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray" className="icon"
+                      onClick={() => updateData(record)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete" color="lightGray" className="icon"
+                      onClick={() => deleteData(record.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItem>
+                )
+                :
                 <ListItem divider key={index} sx={{ px: 8, py: 2.5 }} className="list">
-                  <ListItemText primaryTypographyProps={{ style: titleEx }} primary={record.descs} className="fw-bold"
+                  <ListItemText primaryTypographyProps={{ style: titleIn }} primary={record.descs} className="fw-bold"
                     secondary={
                       <React.Fragment>
                         <Typography
                           sx={{ display: 'inline', fontWeight: 600 }}
                           component="span"
                           variant="body2"
-                          color="rgb(206, 102, 128)"
+                          color="rgb(88, 88, 88)"
                         >
-                          花費：{record.price} / 分類：{record.category} / 日期：{record.date}
+                          進帳：{record.price} / 分類：{record.category} / 日期：{record.date}
                         </Typography>
                       </React.Fragment>
                     }></ListItemText>
@@ -129,36 +164,10 @@ export default function RecordList() {
                   </IconButton>
                 </ListItem>
               )
-              :
-              <ListItem divider key={index} sx={{ px: 8, py: 2.5 }} className="list">
-                <ListItemText primaryTypographyProps={{ style: titleIn }} primary={record.descs} className="fw-bold"
-                  secondary={
-                    <React.Fragment>
-                      <Typography
-                        sx={{ display: 'inline', fontWeight: 600 }}
-                        component="span"
-                        variant="body2"
-                        color="rgb(88, 88, 88)"
-                      >
-                        進帳：{record.price} / 分類：{record.category} / 日期：{record.date}
-                      </Typography>
-                    </React.Fragment>
-                  }></ListItemText>
-                <IconButton edge="end" aria-label="update" sx={{ mx: 2 }} color="lightGray" className="icon"
-                  onClick={() => updateData(record)}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton edge="end" aria-label="delete" color="lightGray" className="icon"
-                  onClick={() => deleteData(record.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </ListItem>
             )
           )
-        )
-          : <Typography sx={{ textAlign: 'center', py: 1.5, color: '#415A77', fontWeight: 600 }}>目前沒有記錄，快去記一筆吧 ~</Typography>
-}
+            : <Typography sx={{ textAlign: 'center', py: 1.5, color: '#415A77', fontWeight: 600 }}>目前沒有記錄，快去記一筆吧 ~</Typography>
+          }
         </List>
       </Box>
       <Fab color="primary" aria-label="add"
@@ -177,7 +186,7 @@ export default function RecordList() {
         onClose={handleClose}
       >
         <TabSwitch open={open} onClose={handleClose}
-          record={records}
+          record={currentRecord}
         />
       </Dialog>
     </Box>
