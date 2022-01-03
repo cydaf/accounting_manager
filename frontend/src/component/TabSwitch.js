@@ -3,7 +3,6 @@ import axios from 'axios';
 import {
     Box,
     Tab,
-    Dialog,
     Card,
     CardContent,
     Autocomplete,
@@ -15,9 +14,6 @@ import {
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import AppMenu from "../component/AppMenu";
-import AddExpenditure from './AddExpenditure';
-import AddIncome from './AddIncome';
 import TextField from "@mui/material/TextField";
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Stack from "@mui/material/Stack";
@@ -32,9 +28,6 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 export default function TabSwitch(props) {
 
-
-
-    const handleOpen = props.open;
     const handleClose = props.onClose;
 
     const [tabValue, setTabValue] = useState('1');
@@ -43,16 +36,13 @@ export default function TabSwitch(props) {
         setTabValue(newValue);
     };
 
-    const [exValue, setExValue] = useState(optionsEx[0].label);
-    const [inValue, setInValue] = useState(optionsIn[0].label);
-    const [inputValue, setInputValue] = useState('');
-    const [priceValue, setPriceValue] = useState(null);
-    const [dateValue, setDateValue] = useState(new Date());
-    const [descsValue, setDescsValue] = useState('');
+    const nowDate = new Date();
+    let month = nowDate.getMonth() + 1>10?nowDate.getMonth() + 1:"0"+(nowDate.getMonth() + 1);
+    let day = nowDate.getDate() >10?nowDate.getDate():"0"+nowDate.getDate();
+    console.log("today" + month + '-' + day);
 
-    const date = new Date();
     const [record, setRecord] = useState({
-        date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
+        date: nowDate.getFullYear() + "-" + month + "-" + day,
         price: 0,
         category: "",
         descs: "",
@@ -64,19 +54,29 @@ export default function TabSwitch(props) {
     const updateIn = async function () {
         // const record = { date: dateValue, price: priceValue, category: inputValue, descs: descsValue, revenue: 'income', user_id: "1" };
         // console.log(record);
+        // let auth = {auth: {
+        //     username: account,
+        //     password: password
+        //   }}
         try {
             if (record.id) {
+                record.user_id = 18;
                 await axios.put("/Record", record);
+                
                 alert("修改收入");
             }
             else {
                 record.revenue = "income";
+                record.user_id = 18;
+console.log(record.date);
                 await axios.post("/Record", record);
                 alert("成功記一筆收入");
             }
         }
         catch (e) {
             console.log(e);
+console.log("error" + record.date, record.price);
+
             alert("紀錄失敗");
         }
         handleClose();
@@ -85,13 +85,21 @@ export default function TabSwitch(props) {
     const updateEx = async function () {
         // const record = { date: dateValue, price: priceValue, category: inputValue, descs: descsValue, revenue: 'expense', user_id: "1" };
         // console.log(record);
+        // let auth = {auth: {
+        //     username: account,
+        //     password: password
+        //   }}
         try {
             if (record.id) {
+                record.user_id = 18;
+
                 await axios.put("/Record", record);
                 alert("修改支出");
             }
             else {
                 record.revenue = "expense";
+                record.user_id = 18;
+
                 await axios.post("/Record", record);
                 alert("成功記一筆支出");
             }
@@ -114,7 +122,9 @@ export default function TabSwitch(props) {
 
     const handleDate = function (value) {
         console.log(value);
-        const newDate = value.getFullYear() + "-" + (value.getMonth() + 1) + "-" + value.getDate();
+        let month = value.getMonth() + 1>10?value.getMonth() + 1:"0"+(value.getMonth() + 1);
+        let day = value.getDate() >10?value.getDate():"0"+value.getDate();
+        const newDate = value.getFullYear() + "-" + month + "-" + day;
         setRecord({ ...record, date: newDate });
     };
 
@@ -163,6 +173,7 @@ export default function TabSwitch(props) {
                                                         //     setRecord({ ...record, date: newDate });
                                                         // }}
                                                         minDate={new Date('2017-01-01')}
+                                                        inputFormat="yyyy/MM/dd"
                                                         value={record.date}
                                                         onChange={handleDate}
                                                         name="date"
@@ -281,6 +292,7 @@ export default function TabSwitch(props) {
                                                         // onChange={(newValue) => {
                                                         //     setDateValue(newValue);
                                                         // }}
+                                                        inputFormat="yyyy/MM/dd"
                                                         value={record.date}
                                                         onChange={handleClick}
                                                         name="date"
