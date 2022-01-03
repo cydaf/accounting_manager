@@ -42,6 +42,7 @@ export default function ForumPersonal() {
   async function fetchData() {
       try {
         const result = await axios.get("/Gossip/personal/1"); // 先把使用者寫死
+        setArticle([]);
         setArticle([...result.data])
       } catch (e) {
         alert("get failed，使用前端預設值");

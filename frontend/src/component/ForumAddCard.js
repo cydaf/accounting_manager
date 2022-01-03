@@ -35,15 +35,20 @@ export default function ForumAddCard(props) {
 
   // 新增/修改文章
   const update = async function () {
+    const date = new Date();
+    console.log(date.getMonth(),date.getMonth()<10)
+    let month = date.getMonth() + 1>10?date.getMonth() + 1:'0'+(date.getMonth() + 1);
+    let day = date.getDate() >10?date.getDate():'0'+date.getDate()
       try {
         if (!article.gossip_id) { // 新增
           const date = new Date();
-          article.date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+          article.date = date.getFullYear() + "-" + month + "-" + day;
           article.user_id = 1;
           await axios.post("/Gossip", article);
         }else{ // 修改
-          const date = new Date();
-          article.date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+          
+
+          article.date = date.getFullYear() + "-" +month + "-" + day;
           await axios.put("/Gossip", article);
         }
       } catch (e) {
