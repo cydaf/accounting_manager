@@ -30,11 +30,17 @@ public class AccountController {
     public String login() {
         return "登入成功";
     }
-
+    //get username
     @GetMapping(value = {"/username"})
     @ResponseBody
     public String currentUserName(Authentication authentication) {
         return dao.showName(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+    //getuserID
+    @GetMapping(value = {"/userID"})
+    @ResponseBody
+    public String currentUser(Authentication authentication) {
+        return dao.showID(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }

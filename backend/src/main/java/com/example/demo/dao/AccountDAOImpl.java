@@ -61,5 +61,25 @@ public class AccountDAOImpl implements AccountDAO {
     }
     return name;
   }
+
+    @Override
+    public String showID(String account) {
+      String user_id = null;
+    try {
+      Connection conn = dataSource.getConnection();
+      String sql = "select user_id from user where account = ? ";
+      PreparedStatement stmt = conn.prepareStatement(sql);
+      stmt.setString(1, account);
+      ResultSet rs = stmt.executeQuery();
+      while(rs.next() != false){
+        user_id = rs.getString("user_id");
+      }
+      conn.close();
+    } catch(Exception e) {
+        //something wrong
+        System.out.println(e);
+    }
+    return user_id;
+    }
     
 }

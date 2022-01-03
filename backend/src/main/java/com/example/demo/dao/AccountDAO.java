@@ -4,6 +4,6 @@ import com.example.demo.entity.Account;
 
 public interface AccountDAO {
     public int signUp(Account account);
-
     public String showName(String name);
+    public String showID(String name);
 }
