@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.SQLException;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.example.demo.dao.AccountDAO;
 import com.example.demo.entity.Account;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 public class AccountController {
@@ -32,9 +35,10 @@ public class AccountController {
         return "登入成功";
     }
 
-    @GetMapping(value = {"/user/{user_id}"})
-    public String showname(@PathVariable("user_id") int user_id) throws SQLException{
-        return dao.showName(user_id);
+    @GetMapping(value = {"/username"})
+    @ResponseBody
+    public String currentUserName(Authentication authentication) {
+        return dao.showName(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }
