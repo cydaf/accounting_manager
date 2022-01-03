@@ -42,4 +42,25 @@ public class AccountDAOImpl implements AccountDAO {
         }
         return result;
     }
+
+    @Override
+    public String showName(int user_id) {
+    String name = null;
+    // TODO Auto-generated method stub
+    try {
+      Connection conn = dataSource.getConnection();
+      String sql = "select name from user where user_id = ? ";
+      PreparedStatement stmt = conn.prepareStatement(sql);
+      stmt.setInt(1, user_id);
+      ResultSet rs = stmt.executeQuery();
+      while(rs.next() != false){
+        name = rs.getString("name");
+      }
+      conn.close();
+    } catch(Exception e) {
+        //something wrong
+        System.out.println(e);
+    }
+    return name;
+  }
 }
