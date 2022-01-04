@@ -4,11 +4,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.dao.AccountDAO;
 import com.example.demo.entity.Account;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 public class AccountController {
@@ -26,6 +29,18 @@ public class AccountController {
     @GetMapping(value = {"/user"})
     public String login() {
         return "登入成功";
+    }
+    //get username
+    @GetMapping(value = {"/username"})
+    @ResponseBody
+    public String currentUserName(Authentication authentication) {
+        return dao.showName(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+    //getuserID
+    @GetMapping(value = {"/userID"})
+    @ResponseBody
+    public String currentUser(Authentication authentication) {
+        return dao.showID(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }
