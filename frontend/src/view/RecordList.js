@@ -21,8 +21,10 @@ export default function RecordList() {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+    let month = date.getMonth() + 1>10?date.getMonth() + 1:"0"+(date.getMonth() + 1);
+    let day = date.getDate() >10?date.getDate():"0"+date.getDate();
     setCurrentRecord({
-      date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
+      date: date.getFullYear() + "-" + month + "-" + day,
       price: 0,
       category: "",
       descs: "",

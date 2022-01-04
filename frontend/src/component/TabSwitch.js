@@ -37,9 +37,8 @@ export default function TabSwitch(props) {
     };
 
     const nowDate = new Date();
-    let month = nowDate.getMonth() + 1>10?nowDate.getMonth() + 1:"0"+(nowDate.getMonth() + 1);
-    let day = nowDate.getDate() >10?nowDate.getDate():"0"+nowDate.getDate();
-    console.log("today" + month + '-' + day);
+    let month = nowDate.getMonth() + 1 > 10 ? nowDate.getMonth() + 1 : "0" + (nowDate.getMonth() + 1);
+    let day = nowDate.getDate() > 10 ? nowDate.getDate() : "0" + nowDate.getDate();
 
     const [record, setRecord] = useState({
         date: nowDate.getFullYear() + "-" + month + "-" + day,
@@ -62,21 +61,18 @@ export default function TabSwitch(props) {
             if (record.id) {
                 record.user_id = 18;
                 await axios.put("/Record", record);
-                
+
                 alert("修改收入");
             }
             else {
                 record.revenue = "income";
                 record.user_id = 18;
-console.log(record.date);
                 await axios.post("/Record", record);
                 alert("成功記一筆收入");
             }
         }
         catch (e) {
             console.log(e);
-console.log("error" + record.date, record.price);
-
             alert("紀錄失敗");
         }
         handleClose();
@@ -122,8 +118,8 @@ console.log("error" + record.date, record.price);
 
     const handleDate = function (value) {
         console.log(value);
-        let month = value.getMonth() + 1>10?value.getMonth() + 1:"0"+(value.getMonth() + 1);
-        let day = value.getDate() >10?value.getDate():"0"+value.getDate();
+        let month = value.getMonth() + 1 > 10 ? value.getMonth() + 1 : "0" + (value.getMonth() + 1);
+        let day = value.getDate() > 10 ? value.getDate() : "0" + value.getDate();
         const newDate = value.getFullYear() + "-" + month + "-" + day;
         setRecord({ ...record, date: newDate });
     };
@@ -131,21 +127,20 @@ console.log("error" + record.date, record.price);
 
     useEffect(() => {
         setRecord(props.record);
-        if(props.record.revenue == "expense"){
+        if (props.record.revenue == "expense") {
             props.record.revenue = '1';
-        }else if(props.record.revenue == "income"){
+        } else if (props.record.revenue == "income") {
             props.record.revenue = '2';
-        }else if(props.record.revenue == ""){
+        } else if (props.record.revenue == "") {
             props.record.revenue = '1';
         }
         setTabValue(props.record.revenue);
     }, [props.record, props.record.revenue]);
-   
+
 
 
     return (
         <Box>
-            {/* <Dialog open={handleOpen}> */}
             <Box sx={{ width: '100%' }} >
                 <TabContext value={tabValue}>
                     <Box sx={{ background: 'rgb(195, 205, 219)' }}>
@@ -165,13 +160,6 @@ console.log("error" + record.date, record.price);
                                                 <Stack spacing={3} >
                                                     <DesktopDatePicker
                                                         label="消費日期"
-                                                        // value={dateValue}
-                                                        // onChange={(newValue) => {
-                                                        //     // setDateValue(newValue);
-                                                        //     console.log(newValue.getFullYear() + "-" + (newValue.getMonth() + 1) + "-" + newValue.getDate())
-                                                        //     const newDate = newValue;
-                                                        //     setRecord({ ...record, date: newDate });
-                                                        // }}
                                                         minDate={new Date('2017-01-01')}
                                                         inputFormat="yyyy/MM/dd"
                                                         value={record.date}
@@ -193,11 +181,6 @@ console.log("error" + record.date, record.price);
                                                         InputLabelProps={{
                                                             shrink: true,
                                                         }}
-                                                        // value={priceValue}
-                                                        // onChange={(e) => {
-                                                        //     setPriceValue(e.target.value)
-                                                        // }
-                                                        // }
                                                         value={record.price}
                                                         onChange={handleClick}
                                                     />
@@ -205,22 +188,11 @@ console.log("error" + record.date, record.price);
                                                 <Autocomplete
                                                     name="category"
                                                     size="small"
-                                                    // value={record.category}
-                                                    // value={exValue}
-                                                    // onChange={(event, newInputValue) => {
-                                                    //     setExValue(newInputValue);
-                                                    // }}
                                                     onChange={handleCate}
-
-                                                    // inputValue={inputValue}
-                                                    // onInputChange={(event, newInputValue) => {
-                                                    //     setInputValue(newInputValue);
-                                                    // }}
-                                                    // inputValue={record.category}
-                                                    // onInputChange={handleClick}
                                                     id="controllable-states-demo"
                                                     options={optionsEx}
-                                                    defaultValue={[optionsEx[0]]}
+                                                    // defaultValue={props.record.category != ""? optionsEx.find(v => v.label[1]):optionsEx.find(v => v.label[0])}
+                                                    // getOptionSelected = {(option, v) => option.label === v.label}
                                                     getOptionLabel={(option) => option.label || ""}
                                                     sx={{ width: '50vw' }}
                                                     renderOption={(props, option) => (
@@ -231,7 +203,7 @@ console.log("error" + record.date, record.price);
                                                     )}
                                                     renderInput={(params) => <TextField {...params} label="類別" inputProps={{
                                                         ...params.inputProps,
-
+                                                        
                                                     }} />}
                                                 />
                                             </Box>
@@ -243,27 +215,16 @@ console.log("error" + record.date, record.price);
                                                 aria-label="maximum height"
                                                 placeholder="寫點備註吧..."
                                                 className="textarea"
-                                                // value={descsValue}
-                                                // onChange={(e) => {
-                                                //     setDescsValue(e.target.value)
-                                                // }}
                                                 onChange={handleClick}
                                                 value={record.descs}
                                             />
                                         </Stack>
-                                        {/* <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} component={Link} to="../">取消</Button> */}
                                         <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} onClick={handleClose}>取消</Button>
                                         <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} onClick={updateEx}>
                                             {record.id ? "修改" : "新增"}
-                                            {/* 儲存 */}
                                         </Button>
                                     </CardContent>
                                     <div>
-                                        {/* <div>{`消費日期： ${dateValue !== null ? `'${dateValue.getFullYear()}/${dateValue.getMonth() + 1}/${dateValue.getDate()}'` : 'null'}`}</div>
-                                        <div>{`消費金額： ${priceValue !== null ? `'${priceValue}'` : 'null'}`}</div>
-                                        <div>{`類別: '${inputValue}'`}</div>
-                                        <div>{`細項: '${descsValue}'`}</div> */}
-
                                         <div>{`消費日期： ${record.date !== "" ? `'${record.date}'` : 'null'}`}</div>
                                         <div>{`消費金額： ${record.price !== "" ? `'${record.price}'` : 'null'}`}</div>
                                         <div>{`類別: '${record.category}'`}</div>
@@ -276,9 +237,7 @@ console.log("error" + record.date, record.price);
                         </Box>
                     </TabPanel>
                     <TabPanel value="2">
-                        {/* <AddIncome /> */}
                         <Box>
-                            {/* <AppMenu /> */}
                             <Container maxWidth="sm" sx={{ mt: 5 }}>
                                 <Card sx={{ minWidth: 275 }} >
                                     <CardContent>
@@ -287,11 +246,7 @@ console.log("error" + record.date, record.price);
                                                 <Stack spacing={3}>
                                                     <DesktopDatePicker
                                                         label="進款日期"
-                                                        // value={dateValue}
                                                         minDate={new Date('2017-01-01')}
-                                                        // onChange={(newValue) => {
-                                                        //     setDateValue(newValue);
-                                                        // }}
                                                         inputFormat="yyyy/MM/dd"
                                                         value={record.date}
                                                         onChange={handleClick}
@@ -311,11 +266,6 @@ console.log("error" + record.date, record.price);
                                                         InputLabelProps={{
                                                             shrink: true,
                                                         }}
-                                                        // value={priceValue}
-                                                        // onChange={(e) => {
-                                                        //     setPriceValue(e.target.value)
-                                                        // }
-                                                        // }
                                                         value={record.price}
                                                         onChange={handleClick}
                                                         name="price"
@@ -324,19 +274,8 @@ console.log("error" + record.date, record.price);
                                                 <Autocomplete
                                                     name="category"
                                                     size="small"
-                                                    // value={record.category}
                                                     onChange={handleCate}
-                                                    // value={inValue}
-                                                    // onChange={(event, newInputValue) => {
-                                                    //     setInValue(newInputValue);
-                                                    // }}
                                                     defaultValue={[optionsIn[0]]}
-                                                    // inputValue={inputValue}
-                                                    // onInputChange={(event, newInputValue) => {
-                                                    //     setInputValue(newInputValue);
-                                                    // }}
-                                                    // inputValue={record.category}
-                                                    // onInputChange={handleClick}
                                                     id="controllable-states-demo"
                                                     options={optionsIn}
                                                     getOptionLabel={(option) => option.label || ""}
@@ -359,25 +298,15 @@ console.log("error" + record.date, record.price);
                                                 aria-label="maximum height"
                                                 placeholder="寫點備註吧..."
                                                 className="textarea"
-                                                // value={descsValue}
-                                                // onChange={(e) => {
-                                                //     setDescsValue(e.target.value)
-                                                // }
-                                                // }
                                                 name="descs"
                                                 onChange={handleClick}
                                                 value={record.descs}
                                             />
                                         </Stack>
-                                        {/* <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} component={Link} to="../">取消</Button> */}
                                         <Button variant="outlined" startIcon={<HighlightOffIcon />} sx={{ mt: 3, mr: 2 }} onClick={handleClose}>取消</Button>
                                         <Button variant="contained" endIcon={<SaveIcon />} sx={{ mt: 3 }} onClick={updateIn}>{record.id ? "修改" : "新增"}</Button>
                                     </CardContent>
                                     <div>
-                                        {/* <div>{`消費日期： ${dateValue !== null ? `'${dateValue.getFullYear()}/${dateValue.getMonth() + 1}/${dateValue.getDate()}'` : 'null'}`}</div>
-                                        <div>{`進帳金額： ${priceValue !== null ? `'${priceValue}'` : 'null'}`}</div>
-                                        <div>{`類別: '${inputValue}'`}</div>
-                                        <div>{`細項: '${descsValue}'`}</div> */}
                                         <div>{`消費日期： ${record.date !== "" ? `'${record.date}'` : 'null'}`}</div>
                                         <div>{`消費金額： ${record.price !== "" ? `'${record.price}'` : 'null'}`}</div>
                                         <div>{`類別: '${record.category}'`}</div>
@@ -390,7 +319,6 @@ console.log("error" + record.date, record.price);
                     </TabPanel>
                 </TabContext>
             </Box>
-            {/* // </Dialog> */}
         </Box>
     );
 }
