@@ -34,6 +34,7 @@ export default function SignIn() {
       try {
         // get user資料
         const res = await axios.get("/user", auth)
+        STATUS.account = account;
         if (res) {
           handleInfo()
           // STATUS.id = 1;
