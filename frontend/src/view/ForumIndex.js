@@ -12,13 +12,14 @@ import { Link } from "react-router-dom";
 export default function ForumIndex() {
 
   const [article, setArticle] = useState([]);
-
   const [open, setOpen] = useState(false);
 
+   // 打開新增文章彈跳視窗
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  // 關閉新增文章彈跳視窗
   const handleClose = (refresh=false) => {
     setOpen(false);
     if(refresh){
@@ -122,10 +123,9 @@ export default function ForumIndex() {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               發表你的想法吧....
             </Typography>
-            
           </Toolbar>
         </AppBar>
-        <ForumAddCard open={open} onClose={handleClose}></ForumAddCard>
+        <ForumAddCard  onClose={handleClose}></ForumAddCard>
       </Dialog>
     </Box>
   );

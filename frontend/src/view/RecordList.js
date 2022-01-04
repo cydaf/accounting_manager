@@ -50,8 +50,8 @@ export default function RecordList() {
   }, [open, deleted, date]);
 
   async function fetchData() {
-    const result = await axios.get("/Record/" + 1 + "/date/" + onChangeDate);
-    const sumResult = await axios.get("/RecordSum/" + 1 + "/date/" + onChangeDate);
+    const result = await axios.get("/Record/" + 18 + "/date/" + onChangeDate);
+    const sumResult = await axios.get("/RecordSum/" + 18 + "/date/" + onChangeDate);
     console.log(result.data);
     setRecords(result.data);
     console.log(sumResult.data);

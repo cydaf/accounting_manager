@@ -30,7 +30,7 @@ export default function SignIn() {
   const [message, setMessage] = useState("");
   //登入
   const handleSubmit = async function () {
-    let auth = { account: account, password: password };
+    let auth = { auth:{username: account, password: password} };
       try {
         // get user資料
         const res = await axios.get("/user", auth);

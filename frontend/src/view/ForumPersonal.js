@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Fab ,Dialog , AppBar,Toolbar,Typography,} from "@mui/material";
+import { Box, Container, Fab ,Dialog , AppBar,Toolbar,Typography, fabClasses,} from "@mui/material";
 import axios from "axios";
 import AppMenu from "../component/AppMenu";
 import ForumCard from "../component/ForumCard";
@@ -12,48 +12,65 @@ import { Link } from "react-router-dom";
 export default function ForumPersonal() {
 
   const [article, setArticle] = useState([]);
-
   const [open, setOpen] = useState(false);
+  const [temp, setTemp] = useState({});
 
-  const handleClickOpen = () => {
+  // 打開新增文章彈跳視窗
+  const handleClickOpen = (temp) => {
+    if(temp.title){
+      setTemp(temp) // edit：賦予當前文章 temp 值
+    }
     setOpen(true);
   };
 
+  // 關閉新增文章彈跳視窗
   const handleClose = (refresh=false) => {
     setOpen(false);
+    setTemp({}) // 清空當前文章 temp 值
     if(refresh){
-      fetchData()
+      fetchData();
     }
   };
+
+  console.log('render')
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  // 取得文章
   async function fetchData() {
       try {
-        const result = await axios.get("/Gossip/personal/1");
-        console.log(result.data)
-        setArticle(result.data);
+        const result = await axios.get("/Gossip/personal/1"); // 先把使用者寫死
+        setArticle([]);
+        setArticle([...result.data])
       } catch (e) {
         alert("get failed，使用前端預設值");
         setArticle([
           {
-            id: 1,
+            gossip_id: 1,
             title: "ETF 投資心法",
-            user_name: "Andy",
-            user_id: 1,
-            content: "0050,0056是個好投資",
+            content: "台積電今年10月拍板赴日設立12吋晶圓廠，近期密集核算在日本的建廠成本，發現在日方全力協助下，建廠成本已幾乎和台灣相近，讓台積電對赴日本興建晶圓廠，一改先前認定成本高等不利的態度，台積電內部可能調整在日本設廠戰略布局，不排除也另在日本設立先進製程晶圓廠。",
             date: "2021-12-07",
-          },
-          {
-            id: 2,
-            title: "台積電股票",
-            user_name: "Tim",
             user_id: 1,
+            category: "理財",
+            author: "Andy",
+            total: 1,
+            islike: 0,
+            iscollect: 1
+            },
+            {
+            gossip_id: 2,
+            title: "台積電股票",
             content: "台積電近日股市連續上漲",
             date: "2021-12-06",
-          },
+            user_id: 2,
+            category: "理財",
+            author: "Mavis",
+            total: 1,
+            islike: 1,
+            iscollect: 0
+            },
         ]);
       }
     }
@@ -63,7 +80,7 @@ export default function ForumPersonal() {
       <Container maxWidth="sm">
       <img src="./../assets/banner-per.png" alt="banner" style={{maxWidth: '100%'}}></img>
         {article.map((data, index) => {
-          return <ForumCard key={index} title={data} edit={true}></ForumCard>;
+          return <ForumCard key={index} title={data} canEdit={true} fetch={fetchData} openDialog={handleClickOpen}></ForumCard>;
         })}
 
       </Container>
@@ -86,9 +103,7 @@ export default function ForumPersonal() {
         aria-label="add"
         sx={{
           position: "fixed",
-
           bottom: (theme) => theme.spacing(2),
-
           left: (theme) => theme.spacing(2),
         }}
       >
@@ -107,17 +122,15 @@ export default function ForumPersonal() {
       </Fab>
       <Dialog
         open={open}
-        onClose={handleClose}
       >
         <AppBar sx={{ position: "relative" }}>
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               發表你的想法吧....
-            </Typography>
-            
+            </Typography> 
           </Toolbar>
         </AppBar>
-        <ForumAddCard open={open} onClose={handleClose}></ForumAddCard>
+        <ForumAddCard onClose={handleClose} tempData={temp}></ForumAddCard>
       </Dialog>
     </Box>
   );
