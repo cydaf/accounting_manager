@@ -27,12 +27,12 @@ export default function AppMenu() {
   };
   useEffect(() => {
     async function fetchData () {
-      const user = await axios.get('/user/13');
+      const user = await axios.get('/username');
       //userID
       console.log(ID.userID)
       console.log(user.data);
-      setUsername(user.username);
-      setAccount(user.account);
+      setUsername(user.data);
+      // setAccount(user.account);
     }
     fetchData();
 
