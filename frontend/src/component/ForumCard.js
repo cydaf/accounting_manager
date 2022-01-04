@@ -23,6 +23,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import {STATUS} from "../account/AuthContext";
 
 
 export default function ForumCard(props) {
@@ -38,7 +39,7 @@ export default function ForumCard(props) {
     try {
       const result = await axios.put("/Gossip/like",{
         gossip_id,
-        user_id:1,  // 先把使用者寫死
+        user_id:STATUS.id,  // 先把使用者寫死
         islike:islike===0?1:0,
       });
       let data = {...article}
@@ -56,7 +57,7 @@ export default function ForumCard(props) {
     try {
       const result = await axios.put("/Gossip/collect",{
         gossip_id,
-        user_id:1, // 先把使用者寫死
+        user_id:STATUS.id, // 先把使用者寫死
         iscollect:iscollect===0?1:0,
       });
       let data = {...article}

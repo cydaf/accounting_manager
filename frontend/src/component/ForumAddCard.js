@@ -16,6 +16,8 @@ import {
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
+import {STATUS} from "../account/AuthContext";
+
 
 export default function ForumAddCard(props) {
   const handleClose = props.onClose; // 關閉視窗方法
@@ -36,18 +38,15 @@ export default function ForumAddCard(props) {
   // 新增/修改文章
   const update = async function () {
     const date = new Date();
-    console.log(date.getMonth(),date.getMonth()<10)
     let month = date.getMonth() + 1>10?date.getMonth() + 1:'0'+(date.getMonth() + 1);
     let day = date.getDate() >10?date.getDate():'0'+date.getDate()
       try {
         if (!article.gossip_id) { // 新增
           const date = new Date();
           article.date = date.getFullYear() + "-" + month + "-" + day;
-          article.user_id = 1;
+          article.user_id = STATUS.id;
           await axios.post("/Gossip", article);
         }else{ // 修改
-          
-
           article.date = date.getFullYear() + "-" +month + "-" + day;
           await axios.put("/Gossip", article);
         }
@@ -76,18 +75,18 @@ export default function ForumAddCard(props) {
           <CardContent>
 
             <Stack spacing={3} sx={{ width: 500 }}>
-              <Chip
+              {/* <Chip
                 avatar={
                   <Avatar
                     alt="Natacha"
                     src="https://images.unsplash.com/photo-1596805827513-33a7b2523abf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&q=80"
                   />
                 }
-                label="理財小達人"
+                label={article.author}
                 variant="Chip Filled"
                 size="small"
                 sx={{ width: 100 }}
-              />
+              /> */}
               <TextField
                 id="filled-basic"
                 label="文章標題"

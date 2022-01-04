@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link } from "react-router-dom";
+import {STATUS} from "../account/AuthContext";
 
 export default function ForumPersonal() {
 
@@ -32,7 +33,6 @@ export default function ForumPersonal() {
     }
   };
 
-  console.log('render')
 
   useEffect(() => {
     fetchData();
@@ -41,7 +41,7 @@ export default function ForumPersonal() {
   // 取得文章
   async function fetchData() {
       try {
-        const result = await axios.get("/Gossip/personal/1"); // 先把使用者寫死
+        const result = await axios.get("/Gossip/personal/"+STATUS.id); // 先把使用者寫死
         setArticle([]);
         setArticle([...result.data])
       } catch (e) {
