@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link } from "react-router-dom";
+import {STATUS} from "../account/AuthContext";
 
 export default function ForumCollect() {
 
@@ -32,8 +33,7 @@ export default function ForumCollect() {
 
   async function fetchData() {
       try {
-        const result = await axios.get("/Gossip/archieve/1");
-        console.log(result.data)
+        const result = await axios.get("/Gossip/archieve/"+STATUS.id); // 先把使用者寫死
         setArticle(result.data);
       } catch (e) {
         alert("get failed，使用前端預設值");

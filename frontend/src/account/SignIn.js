@@ -33,14 +33,14 @@ export default function SignIn() {
     let auth = { auth:{username: account, password: password} };
       try {
         // get user資料
-        const res = await axios.get("/user", auth);
-        console.log(auth);
+        const res = await axios.get("/user", auth)
         if (res) {
-          console.log(res);
-          console.log(res.statusText);
+          handleInfo()
+          // STATUS.id = 1;
           setMessage(res.data);
           navigate('/record');
           authContext.setStatus(STATUS.toSignOut);
+
         }else{
           console.log("something wrong")
         }
@@ -50,6 +50,26 @@ export default function SignIn() {
       }
     
   };
+
+
+  const handleInfo = async function () {
+    let auth = { auth:{username: account, password: password} };
+    try {
+      // get user資料
+      const res = await axios.get("/userID", auth);
+      if (res) {
+        console.log("res:",res) 
+        STATUS.id = res.data;
+      }else{
+        console.log("something wrong")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  
   //註冊
   const changeStatus = function () {
     authContext.setStatus(STATUS.toSignUp);
