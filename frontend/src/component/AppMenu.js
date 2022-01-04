@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 
 //context傳值
-import { AuthContext, STATUS, ID } from "../account/AuthContext";
+import { AuthContext, STATUS } from "../account/AuthContext";
 
 import { Link } from "react-router-dom";
 
@@ -17,9 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 
+
 export default function AppMenu() {
   const [username, setUsername] = useState("username");
-  const [account, setAccount] = useState("使用者帳號");
+  const [account, setAccount] = useState("南瓜");
   const authContext = useContext(AuthContext);
   //登出
   const changeStatus = function () {
@@ -28,11 +29,9 @@ export default function AppMenu() {
   useEffect(() => {
     async function fetchData () {
       const user = await axios.get('/username');
-      //userID
-      console.log(ID.userID)
-      console.log(user.data);
+      console.log(user.data,STATUS.account);
       setUsername(user.data);
-      // setAccount(user.account);
+      setAccount(STATUS.account);
     }
     fetchData();
 
@@ -83,7 +82,7 @@ export default function AppMenu() {
             ></Avatar>
           </Tooltip>
         ) : (
-          <Tooltip title="尚未登入">
+          <Tooltip title="青蛙噎到~~">
             <Avatar
               sx={{ m: 1, bgcolor: "lightGray.main" }}
               variant="rounded"
