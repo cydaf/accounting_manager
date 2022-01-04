@@ -36,7 +36,7 @@ public class GossipDAOImpl implements GossipDAO{
     "inner join accounting.collect c on c.user_id = ? and c.iscollect = 1 and c.gossip_id = g.gossip_id "+
     "inner join accounting.user u on u.user_id = g.user_id "+
     "group by g.gossip_id "+
-    "order by g.user_id desc";
+    "order by g.date desc";
     PreparedStatement stmt = conn.prepareStatement(sql);
     stmt.setInt(1, user_id);
     stmt.setInt(2, user_id);
@@ -64,7 +64,7 @@ public class GossipDAOImpl implements GossipDAO{
     "left join accounting.collect c on c.iscollect = 1 and c.user_id = ? and c.gossip_id = g.gossip_id "+
     "inner join accounting.user u on u.user_id = g.user_id and u.user_id = ? "+
     "group by g.gossip_id "+
-    "order by g.user_id desc";
+    "order by g.date desc";
     PreparedStatement stmt = conn.prepareStatement(sql);
     stmt.setInt(1, user_id);
     stmt.setInt(2, user_id);
@@ -93,7 +93,7 @@ public List<Gossip> findAll(int user_id) {
     "left join accounting.collect c on c.iscollect = 1 and c.user_id = ? and c.gossip_id = g.gossip_id "+
     "inner join accounting.user u on u.user_id = g.user_id "+
     "group by g.gossip_id "+
-    "order by g.user_id desc";
+    "order by g.date desc";
     PreparedStatement stmt = conn.prepareStatement(sql);
     stmt.setInt(1, user_id);
     stmt.setInt(2, user_id);
