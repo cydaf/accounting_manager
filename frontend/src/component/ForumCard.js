@@ -96,7 +96,7 @@ export default function ForumCard(props) {
     <Box>
     <Card sx={{ minWidth: 275,marginBottom:1 }}>
       <CardContent>
-        <Typography color="text.secondary" sx={{display: 'flex', justifyContent: 'space-between' }} gutterBottom>
+        <Typography variant="div" color="text.secondary" sx={{display: 'flex', justifyContent: 'space-between' }} gutterBottom>
           <Chip
             avatar={
               <Avatar
@@ -130,7 +130,7 @@ export default function ForumCard(props) {
         <Typography variant="body2">
           {content}
         </Typography>
-        <Typography>
+        <Typography variant="div">
       {category.map((data, index) => {
           return <Chip label={data} variant="outlined" sx={{ mb: 0.5,mt:3,mr:0.5}} key={index}/>;
         })}
